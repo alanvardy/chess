@@ -58,7 +58,7 @@ class Board
         if square == " "
           print square
         else
-          print square.icon
+          print square.symbol
         end
         print " | "
       end
@@ -73,9 +73,10 @@ class Board
   end
 
   def select
-    square = input("Select square (i.e. \'b5\') or c to cancel: ")
+    square = input("Select square (i.e. b5) or c to cancel: ")
     return if square == "c"
-
+    x, y = convert(square)
+    identify(x, y)
 
   end
 
@@ -85,10 +86,23 @@ class Board
   end
 
   def convert(string)
-    grid_map = {"a" => 0, "b" => 1, "c" => 2, "d" => 3, "e" => 4, "f" => 5, "g" => 6, "h" => 7,
-                "1" => 0, "2" => 1, "3" => 2, "4" => 3, "5" => 4, "6" => 5, "7" => 6, "8" => 7}
+    grid_map = {"a" => 0, "b" => 1, "c" => 2, "d" => 3,
+                "e" => 4, "f" => 5, "g" => 6, "h" => 7,
+                "1" => 0, "2" => 1, "3" => 2, "4" => 3,
+                "5" => 4, "6" => 5, "7" => 6, "8" => 7}
     x = grid_map[string[0]]
     y = grid_map[string[1]]
+    puts x
+    puts y
     return x, y
+  end
+
+  def identify(x, y)
+    square = @board[y][x]
+    if square == " "
+      puts "You have selected nothing"
+    else
+      puts "You have selected #{square.color} #{square.name}"
+    end
   end
 end
