@@ -47,4 +47,8 @@ class Board
     @board[6][6] = Pawn.new('white', [6, 6])
     @board[6][7] = Pawn.new('white', [6, 7])
   end
+
+  def display
+    puts "This is a board!"
+  end
 end
