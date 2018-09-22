@@ -49,6 +49,25 @@ class Board
   end
 
   def display
-    puts "This is a board!"
+    puts "\n"
+    horizontal_line
+    @board.each do |row|
+      print " | "
+      row.each do |square|
+        if square == " "
+          print square
+        else
+          print square.icon
+        end
+        print " | "
+      end
+      puts ""
+      horizontal_line
+    end
+    puts "\n"
+  end
+
+  def horizontal_line
+    puts ' -' * 17
   end
 end
