@@ -50,10 +50,15 @@ class Board
   end
 
   def display
+    row_number = ["8", "7", "6", "5", "4", "3", "2", "1"]
+    column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+
     puts "\n"
     horizontal_line
+    counter = 0
     @board.each do |row|
-      print " | "
+      print " #{row_number[counter]} | "
       row.each do |square|
         if square == " "
           print square
@@ -62,13 +67,20 @@ class Board
         end
         print " | "
       end
+      counter += 1
       puts ""
       horizontal_line
+    end
+    print "     "
+    column_letter.each do |letter|
+      print letter
+      print "   "
     end
     puts "\n"
   end
 
   def horizontal_line
+    print "  "
     puts ' -' * 17
   end
 
@@ -92,8 +104,6 @@ class Board
                 "5" => 4, "6" => 5, "7" => 6, "8" => 7}
     x = grid_map[string[0]]
     y = grid_map[string[1]]
-    puts x
-    puts y
     return x, y
   end
 
