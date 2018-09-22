@@ -79,6 +79,7 @@ class Knight < Piece
     else
       @symbol = 'U+265E'
     end
+    @moves = [[2, -1], [2, 1], [1, -2], [1, 2], [-1, -2], [-1, 2], [-2, -1], [-2, 1]]
   end
 end
 
