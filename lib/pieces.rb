@@ -1,6 +1,9 @@
 class Piece
   def move
-
+    @moves
+  end
+  def icon
+    @symbol.encode('utf-8')
   end
 end
 
