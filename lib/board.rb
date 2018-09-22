@@ -71,4 +71,13 @@ class Board
   def horizontal_line
     puts ' -' * 17
   end
+
+  def select
+    square = input("Select square (i.e. \'b5\'): ")
+  end
+
+  def input(text)
+    puts text
+    result = gets.chomp
+  end
 end
