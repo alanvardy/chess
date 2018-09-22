@@ -6,6 +6,7 @@ end
 
 class King < Piece
   def initialize(color, location)
+    @moved = 1
     @color = color
     @location = location
     if color == 'white'
@@ -21,6 +22,7 @@ end
 
 class Queen < Piece
   def initialize(color, location)
+    @moved = 1
     @color = color
     @location = location
     if color == 'white'
@@ -42,6 +44,7 @@ end
 
 class Rook < Piece
   def initialize(color, location)
+    @moved = 1
     @color = color
     @location = location
     if color == 'white'
@@ -59,6 +62,7 @@ end
 
 class Bishop < Piece
   def initialize(color, location)
+    @moved = 1
     @color = color
     @location = location
     if color == 'white'
@@ -76,6 +80,7 @@ end
 
 class Knight < Piece
   def initialize(color, location)
+    @moved = 1
     @color = color
     @location = location
     if color == 'white'
@@ -90,6 +95,7 @@ end
 
 class Pawn < Piece
   def initialize(color, location)
+    @moved = 0
     @color = color
     @location = location
     if color == 'white'
@@ -98,9 +104,12 @@ class Pawn < Piece
       @symbol = 'U+265F'
     end
     if color == 'white'
-
+      @first_move
+      @moves =
+      @attacks =
     else
-
+      @moves =
+      @attacks =
     end
   end
 end
