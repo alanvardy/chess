@@ -47,4 +47,27 @@ class Board
     @board[6][6] = Pawn.new('white', [6, 6])
     @board[6][7] = Pawn.new('white', [6, 7])
   end
+
+  def display
+    puts "\n"
+    horizontal_line
+    @board.each do |row|
+      print " | "
+      row.each do |square|
+        if square == " "
+          print square
+        else
+          print square.icon
+        end
+        print " | "
+      end
+      puts ""
+      horizontal_line
+    end
+    puts "\n"
+  end
+
+  def horizontal_line
+    puts ' -' * 17
+  end
 end

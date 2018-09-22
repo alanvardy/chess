@@ -3,7 +3,7 @@ class Piece
     @moves
   end
   def icon
-    @symbol.encode('utf-8')
+    @symbol
   end
 end
 
@@ -12,10 +12,10 @@ class King < Piece
     @moved = 1
     @color = color
     @location = location
-    if color == 'white'
-      @symbol = 'U+2654'
+    if color == "white"
+      @symbol = "\u2654"
     else
-      @symbol = 'U+265A'
+      @symbol = "\u265A"
     end
     @moves = [[-1, -1], [0, -1], [1, -1], [-1, 0],
               [-1, 1], [0, 1], [1, 1], [1, 0]]
@@ -28,10 +28,10 @@ class Queen < Piece
     @moved = 1
     @color = color
     @location = location
-    if color == 'white'
-      @symbol = 'U+2655'
+    if color == "white"
+      @symbol = "\u2655"
     else
-      @symbol = 'U+265B'
+      @symbol = "\u265B"
     end
     @moves = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
               [0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6], [0, -7],
@@ -50,10 +50,10 @@ class Rook < Piece
     @moved = 1
     @color = color
     @location = location
-    if color == 'white'
-      @symbol = 'U+2656'
+    if color == "white"
+      @symbol = "\u2656"
     else
-      @symbol = 'U+265C'
+      @symbol = "\u265C"
     end
     @moves = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
               [0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6], [0, -7],
@@ -68,10 +68,10 @@ class Bishop < Piece
     @moved = 1
     @color = color
     @location = location
-    if color == 'white'
-      @symbol = 'U+2657'
+    if color == "white"
+      @symbol = "\u2657"
     else
-      @symbol = 'U+265D'
+      @symbol = "\u265D"
     end
     @moves = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7],
               [1, -1], [2, -2], [3, -3], [4, -4], [5, -5], [6, -6], [7, -7],
@@ -86,10 +86,10 @@ class Knight < Piece
     @moved = 1
     @color = color
     @location = location
-    if color == 'white'
-      @symbol = 'U+2658'
+    if color == "white"
+      @symbol = "\u2658"
     else
-      @symbol = 'U+265E'
+      @symbol = "\u265E"
     end
     @moves = [[2, -1], [2, 1], [1, -2], [1, 2], [-1, -2], [-1, 2], [-2, -1], [-2, 1]]
     @attacks = @moves
@@ -101,12 +101,12 @@ class Pawn < Piece
     @moved = 0
     @color = color
     @location = location
-    if color == 'white'
-      @symbol = 'U+2659'
+    if color == "white"
+      @symbol = "\u2659"
     else
-      @symbol = 'U+265F'
+      @symbol = "\u265F"
     end
-    if color == 'white'
+    if color == "white"
       @first_move = [[2, 0], [1, 0]]
       @moves = [[1, 0]]
       @attacks = [[1, -1], [1, 1]]
