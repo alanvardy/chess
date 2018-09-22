@@ -106,8 +106,8 @@ class Board
   def convert(string)
     grid_map = {"a" => 0, "b" => 1, "c" => 2, "d" => 3,
                 "e" => 4, "f" => 5, "g" => 6, "h" => 7,
-                "1" => 0, "2" => 1, "3" => 2, "4" => 3,
-                "5" => 4, "6" => 5, "7" => 6, "8" => 7}
+                "1" => 7, "2" => 6, "3" => 5, "4" => 4,
+                "5" => 3, "6" => 2, "7" => 1, "8" => 0}
     x = grid_map[string[0]]
     y = grid_map[string[1]]
     return x, y
@@ -123,10 +123,16 @@ class Board
   end
 
   def start
-    display
-    select
-    move
-    display
+    game
+
+  end
+
+  def game
+    loop do
+      display
+      select
+      move
+    end
   end
 
   def move
