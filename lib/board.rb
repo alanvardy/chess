@@ -3,6 +3,7 @@ require_relative 'pieces'
 class Board
   attr_accessor :board
   def initialize
+    @selected = nil
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -88,6 +89,7 @@ class Board
     square = input("Select square (i.e. b5) or c to cancel: ")
     return if square == "c"
     x, y = convert(square)
+    @selected = [x, y]
     identify(x, y)
 
   end
@@ -119,5 +121,9 @@ class Board
   def start
     display
     select
+  end
+
+  def move
+
   end
 end
