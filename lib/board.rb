@@ -1,9 +1,10 @@
 require_relative 'pieces'
 
 class Board
-  attr_accessor :board
+  attr_accessor :board, :selected_piece, :selected_coordinates
   def initialize
-    @selected = nil
+    @selected_piece = nil
+    @selected_coordinates = nil
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -87,7 +88,8 @@ class Board
 
   def select
     x, y = input_coordinates("Select square")
-    @selected = [x, y]
+    @selected_piece = @board[y][x]
+    @selected_coordinates = [x, y]
     identify(x, y)
 
   end
@@ -123,9 +125,21 @@ class Board
   def start
     display
     select
+    move
+    display
   end
 
   def move
-
+    if @selected_piece == nil
+      puts "You need to select a square first"
+    elsif @selected_piece == " "
+      puts "There is nothing here!"
+    else
+      x, y = input_coordinates("Choose square to move to")
+      @board[y][x] = @selected_piece
+      @board[selected_coordinates[1]][selected_coordinates[0]] = " "
+      @selected_piece = nil
+      @selected_coordinates = nil
+    end
   end
 end
