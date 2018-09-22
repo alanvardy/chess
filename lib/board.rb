@@ -86,17 +86,19 @@ class Board
   end
 
   def select
-    square = input("Select square (i.e. b5) or c to cancel: ")
-    return if square == "c"
-    x, y = convert(square)
+    x, y = input_coordinates("Select square")
     @selected = [x, y]
     identify(x, y)
 
   end
 
-  def input(text)
-    puts text
+  def input_coordinates(text)
+    print text
+    print " (i.e. b5) or c to cancel: "
     result = gets.chomp
+    return if result == "c"
+    x, y = convert(result)
+    return x, y
   end
 
   def convert(string)
