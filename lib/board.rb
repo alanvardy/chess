@@ -76,7 +76,7 @@ class Board
       print letter
       print "   "
     end
-    puts "\n"
+    puts "\n\n"
   end
 
   def horizontal_line
@@ -114,5 +114,10 @@ class Board
     else
       puts "You have selected #{square.color} #{square.name}"
     end
+  end
+
+  def start
+    display
+    select
   end
 end
