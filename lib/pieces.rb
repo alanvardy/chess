@@ -1,5 +1,6 @@
 class Piece
   attr_reader :symbol, :color, :name
+  attr_accessor :location
   # def icon
   #   @symbol
   # end

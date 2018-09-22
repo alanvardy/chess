@@ -143,6 +143,7 @@ class Board
     else
       x, y = input_coordinates("Choose square to move to")
       @board[y][x] = @selected_piece
+      @board[y][x].location = [x, y]
       @board[selected_coordinates[1]][selected_coordinates[0]] = " "
       @selected_piece = nil
       @selected_coordinates = nil
