@@ -1,7 +1,4 @@
 class Piece
-  def move
-    @moves
-  end
   def icon
     @symbol
   end

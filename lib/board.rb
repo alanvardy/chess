@@ -1,6 +1,7 @@
 require_relative 'pieces'
 
 class Board
+  attr_accessor :board
   def initialize
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
