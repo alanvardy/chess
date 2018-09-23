@@ -142,11 +142,21 @@ class Board
       puts "There is nothing here!"
     else
       x, y = input_coordinates("Choose square to move to")
-      @board[y][x] = @selected_piece
-      @board[y][x].location = [x, y]
-      @board[selected_coordinates[1]][selected_coordinates[0]] = " "
-      @selected_piece = nil
-      @selected_coordinates = nil
+      if valid_input?(x, y)
+        @board[y][x] = @selected_piece
+        @board[y][x].location = [x, y]
+        @board[selected_coordinates[1]][selected_coordinates[0]] = " "
+        @selected_piece = nil
+        @selected_coordinates = nil
+      else
+        puts "invalid input"
+        @selected_piece = nil
+        @selected_coordinates = nil
+      end
     end
+  end
+
+  def valid_input?(x, y)
+
   end
 end
