@@ -140,7 +140,10 @@ class Board
     loop do
       display
       select
+      clear_screen
+      display
       move
+      clear_screen
     end
   end
 
@@ -172,5 +175,9 @@ class Board
     end
     puts "Invalid move for #{@selected_piece.name}"
     return false
+  end
+
+  def clear_screen
+    puts "\e[H\e[2J"
   end
 end
