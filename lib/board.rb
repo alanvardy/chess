@@ -96,12 +96,20 @@ class Board
   end
 
   def input_coordinates(text)
-    print text
-    print " (i.e. b5) or c to cancel: "
-    result = gets.chomp
-    return if result == "c"
-    y, x = convert(result)
-    return y, x
+    result = ""
+    loop do
+      print text
+      print " (i.e. b5) or c to cancel: "
+      result = gets.chomp
+      break if result =~ /^[a-h][1-8]$/ || result == "c"
+      puts "Bad input!"
+    end
+    if result == "c"
+      return nil
+    else
+      y, x = convert(result)
+      return y, x
+    end
   end
 
   def convert(string)
