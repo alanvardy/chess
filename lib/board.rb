@@ -157,6 +157,18 @@ class Board
   end
 
   def valid_input?(x, y)
+    if valid_move?(x, y) && on_board?(x, y)
+      return true
+    else
+      return false
+    end
+  end
+
+  def valid_move?(x, y)
+
+  end
+
+  def on_board?(x, y)
 
   end
 end
