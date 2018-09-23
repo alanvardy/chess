@@ -29,10 +29,10 @@ class Board
     @board[0][7] = Rook.new('black', [0, 7])
     @board[7][0] = Rook.new('white', [7, 0])
     @board[7][7] = Rook.new('white', [7, 7])
-    @board[0][1] = Knight.new('black', [0, 0])
-    @board[0][6] = Knight.new('black', [0, 7])
-    @board[7][1] = Knight.new('white', [7, 0])
-    @board[7][6] = Knight.new('white', [7, 7])
+    @board[0][1] = Knight.new('black', [0, 1])
+    @board[0][6] = Knight.new('black', [0, 6])
+    @board[7][1] = Knight.new('white', [7, 1])
+    @board[7][6] = Knight.new('white', [7, 6])
     @board[1][0] = Pawn.new('black', [1, 0])
     @board[1][1] = Pawn.new('black', [1, 1])
     @board[1][2] = Pawn.new('black', [1, 2])
@@ -52,7 +52,7 @@ class Board
   end
 
   def display
-    row_number = ["8", "7", "6", "5", "4", "3", "2", "1"]
+    row_number = ["1", "2", "3", "4", "5", "6", "7", "8"]
     column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
 
@@ -87,10 +87,11 @@ class Board
   end
 
   def select
-    x, y = input_coordinates("Select square")
+    y, x = input_coordinates("Select square")
+    return if y.nil?
     @selected_piece = @board[y][x]
-    @selected_coordinates = [x, y]
-    identify(x, y)
+    @selected_coordinates = [y, x]
+    identify(y, x)
 
   end
 
@@ -99,21 +100,21 @@ class Board
     print " (i.e. b5) or c to cancel: "
     result = gets.chomp
     return if result == "c"
-    x, y = convert(result)
-    return x, y
+    y, x = convert(result)
+    return y, x
   end
 
   def convert(string)
     grid_map = {"a" => 0, "b" => 1, "c" => 2, "d" => 3,
                 "e" => 4, "f" => 5, "g" => 6, "h" => 7,
-                "1" => 7, "2" => 6, "3" => 5, "4" => 4,
-                "5" => 3, "6" => 2, "7" => 1, "8" => 0}
+                "1" => 0, "2" => 1, "3" => 2, "4" => 3,
+                "5" => 4, "6" => 5, "7" => 6, "8" => 7}
     x = grid_map[string[0]]
     y = grid_map[string[1]]
-    return x, y
+    return y, x
   end
 
-  def identify(x, y)
+  def identify(y, x)
     square = @board[y][x]
     if square == " "
       puts "You have selected nothing"
@@ -141,12 +142,27 @@ class Board
     elsif @selected_piece == " "
       puts "There is nothing here!"
     else
-      x, y = input_coordinates("Choose square to move to")
-      @board[y][x] = @selected_piece
-      @board[y][x].location = [x, y]
-      @board[selected_coordinates[1]][selected_coordinates[0]] = " "
-      @selected_piece = nil
-      @selected_coordinates = nil
+      y, x = input_coordinates("Choose square to move to")
+      if valid_move?(y, x)
+        @board[y][x] = @selected_piece
+        @board[y][x].location = [y, x]
+        @board[selected_coordinates[0]][selected_coordinates[1]] = " "
+        @selected_piece = nil
+        @selected_coordinates = nil
+      else
+        @selected_piece = nil
+        @selected_coordinates = nil
+      end
     end
+  end
+
+  def valid_move?(y, x)
+    @selected_piece.moves.each do |move|
+      valid_y = @selected_piece.location[0] + move[0]
+      valid_x = @selected_piece.location[1] + move[1]
+      return true if y == valid_y && x == valid_x
+    end
+    puts "Invalid move for #{@selected_piece.name}"
+    return false
   end
 end
