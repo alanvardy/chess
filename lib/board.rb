@@ -170,10 +170,16 @@ class Board
       valid_x = @selected.location[1] + x
       return true if y == valid_y && x == valid_x
     end
+    puts "Invalid move for #{@selected.name}"
     return false
   end
 
   def on_board?(y, x)
-
+    if x >= 0 && x <= 7 && y >= 0 && y <= 7
+      return true
+    else
+      puts "Not on board"
+      return false
+    end
   end
 end
