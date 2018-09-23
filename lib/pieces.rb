@@ -13,9 +13,9 @@ class King < Piece
     @color = color
     @location = location
     if color == "white"
-      @symbol = "\u2654"
-    else
       @symbol = "\u265A"
+    else
+      @symbol = "\u2654"
     end
     @moves = [[-1, -1], [0, -1], [1, -1], [-1, 0],
               [-1, 1], [0, 1], [1, 1], [1, 0]]
@@ -30,9 +30,9 @@ class Queen < Piece
     @color = color
     @location = location
     if color == "white"
-      @symbol = "\u2655"
-    else
       @symbol = "\u265B"
+    else
+      @symbol = "\u2655"
     end
     @moves = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
               [0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6], [0, -7],
@@ -53,9 +53,9 @@ class Rook < Piece
     @color = color
     @location = location
     if color == "white"
-      @symbol = "\u2656"
-    else
       @symbol = "\u265C"
+    else
+      @symbol = "\u2656"
     end
     @moves = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
               [0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6], [0, -7],
@@ -72,9 +72,9 @@ class Bishop < Piece
     @color = color
     @location = location
     if color == "white"
-      @symbol = "\u2657"
-    else
       @symbol = "\u265D"
+    else
+      @symbol = "\u2657"
     end
     @moves = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7],
               [1, -1], [2, -2], [3, -3], [4, -4], [5, -5], [6, -6], [7, -7],
@@ -91,9 +91,9 @@ class Knight < Piece
     @color = color
     @location = location
     if color == "white"
-      @symbol = "\u2658"
-    else
       @symbol = "\u265E"
+    else
+      @symbol = "\u2658"
     end
     @moves = [[2, -1], [2, 1], [1, -2], [1, 2], [-1, -2], [-1, 2], [-2, -1], [-2, 1]]
     @attacks = @moves
@@ -107,9 +107,9 @@ class Pawn < Piece
     @color = color
     @location = location
     if color == "white"
-      @symbol = "\u2659"
-    else
       @symbol = "\u265F"
+    else
+      @symbol = "\u2659"
     end
     if color == "white"
       @first_move = [[2, 0], [1, 0]]
