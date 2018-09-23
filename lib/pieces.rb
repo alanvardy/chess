@@ -112,13 +112,13 @@ class Pawn < Piece
       @symbol = "\u2659"
     end
     if color == "white"
-      @first_move = [[2, 0], [1, 0]]
-      @moves = [[1, 0]]
-      @attacks = [[1, -1], [1, 1]]
-    else
       @first_move = [[-2, 0], [-1, 0]]
       @moves = [[-1, 0]]
       @attacks = [[-1, -1], [-1, 1]]
+    else
+      @first_move = [[2, 0], [1, 0]]
+      @moves = [[1, 0]]
+      @attacks = [[1, -1], [1, 1]]
     end
   end
 end

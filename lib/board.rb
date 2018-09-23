@@ -29,10 +29,10 @@ class Board
     @board[0][7] = Rook.new('black', [0, 7])
     @board[7][0] = Rook.new('white', [7, 0])
     @board[7][7] = Rook.new('white', [7, 7])
-    @board[0][1] = Knight.new('black', [0, 0])
-    @board[0][6] = Knight.new('black', [0, 7])
-    @board[7][1] = Knight.new('white', [7, 0])
-    @board[7][6] = Knight.new('white', [7, 7])
+    @board[0][1] = Knight.new('black', [0, 1])
+    @board[0][6] = Knight.new('black', [0, 6])
+    @board[7][1] = Knight.new('white', [7, 1])
+    @board[7][6] = Knight.new('white', [7, 6])
     @board[1][0] = Pawn.new('black', [1, 0])
     @board[1][1] = Pawn.new('black', [1, 1])
     @board[1][2] = Pawn.new('black', [1, 2])
@@ -88,6 +88,7 @@ class Board
 
   def select
     y, x = input_coordinates("Select square")
+    return if y.nil?
     @selected_piece = @board[y][x]
     @selected_coordinates = [y, x]
     identify(y, x)
@@ -149,7 +150,6 @@ class Board
         @selected_piece = nil
         @selected_coordinates = nil
       else
-        puts "invalid input"
         @selected_piece = nil
         @selected_coordinates = nil
       end
