@@ -3,6 +3,7 @@ require_relative 'pieces'
 class Board
   attr_accessor :board, :selected_piece, :selected_coordinates
   def initialize
+    @errors = []
     @selected_piece = nil
     @selected_coordinates = nil
     @board = [[" "," "," "," "," "," "," "," "],
@@ -54,8 +55,6 @@ class Board
   def display
     row_number = ["1", "2", "3", "4", "5", "6", "7", "8"]
     column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
-
-
     puts "\n"
     horizontal_line
     counter = 0
@@ -79,6 +78,9 @@ class Board
       print "   "
     end
     puts "\n\n"
+    while @errors.length > 0
+      puts @errors.pop
+    end
   end
 
   def horizontal_line
@@ -102,7 +104,8 @@ class Board
       print " (i.e. b5) or c to cancel: "
       result = gets.chomp
       break if result =~ /^[a-h][1-8]$/ || result == "c"
-      puts "Bad input!"
+      @errors << "Bad input!"
+      return nil
     end
     if result == "c"
       return nil
@@ -125,7 +128,7 @@ class Board
   def identify(y, x)
     square = @board[y][x]
     if square == " "
-      puts "You have selected nothing"
+      @errors << "You have selected nothing"
     else
       puts "You have selected #{square.color} #{square.name}"
     end
@@ -149,9 +152,9 @@ class Board
 
   def move
     if @selected_piece == nil
-      puts "You need to select a square first"
+      @errors << "You need to select a square first"
     elsif @selected_piece == " "
-      puts "There is nothing here!"
+      @errors << "There is nothing here!"
     else
       y, x = input_coordinates("Choose square to move to")
       if valid_move?(y, x)
@@ -173,7 +176,7 @@ class Board
       valid_x = @selected_piece.location[1] + move[1]
       return true if y == valid_y && x == valid_x
     end
-    puts "Invalid move for #{@selected_piece.name}"
+    @errors << "Invalid move for #{@selected_piece.name}"
     return false
   end
 
