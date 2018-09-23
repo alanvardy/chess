@@ -87,10 +87,10 @@ class Board
   end
 
   def select
-    x, y = input_coordinates("Select square")
+    y, x = input_coordinates("Select square")
     @selected_piece = @board[y][x]
-    @selected_coordinates = [x, y]
-    identify(x, y)
+    @selected_coordinates = [y, x]
+    identify(y, x)
 
   end
 
@@ -99,8 +99,8 @@ class Board
     print " (i.e. b5) or c to cancel: "
     result = gets.chomp
     return if result == "c"
-    x, y = convert(result)
-    return x, y
+    y, x = convert(result)
+    return y, x
   end
 
   def convert(string)
@@ -110,10 +110,10 @@ class Board
                 "5" => 3, "6" => 2, "7" => 1, "8" => 0}
     x = grid_map[string[0]]
     y = grid_map[string[1]]
-    return x, y
+    return y, x
   end
 
-  def identify(x, y)
+  def identify(y, x)
     square = @board[y][x]
     if square == " "
       puts "You have selected nothing"
@@ -141,10 +141,10 @@ class Board
     elsif @selected_piece == " "
       puts "There is nothing here!"
     else
-      x, y = input_coordinates("Choose square to move to")
-      if valid_input?(x, y)
+      y, x = input_coordinates("Choose square to move to")
+      if valid_input?(y, x)
         @board[y][x] = @selected_piece
-        @board[y][x].location = [x, y]
+        @board[y][x].location = [y, x]
         @board[selected_coordinates[1]][selected_coordinates[0]] = " "
         @selected_piece = nil
         @selected_coordinates = nil
@@ -156,19 +156,24 @@ class Board
     end
   end
 
-  def valid_input?(x, y)
-    if valid_move?(x, y) && on_board?(x, y)
+  def valid_input?(y, x)
+    if valid_move?(y, x) && on_board?(y, x)
       return true
     else
       return false
     end
   end
 
-  def valid_move?(x, y)
-
+  def valid_move?(y, x)
+    @selected.moves.each do |move|
+      valid_y = @selected.location[0] + y
+      valid_x = @selected.location[1] + x
+      return true if y == valid_y && x == valid_x
+    end
+    return false
   end
 
-  def on_board?(x, y)
+  def on_board?(y, x)
 
   end
 end
