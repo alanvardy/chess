@@ -1,7 +1,10 @@
 require_relative 'pieces'
 
 class Board
+  attr_accessor :board, :selected_piece, :selected_coordinates
   def initialize
+    @selected_piece = nil
+    @selected_coordinates = nil
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -9,7 +12,7 @@ class Board
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
-              [" "," "," "," "," "," "," "," "],]
+              [" "," "," "," "," "," "," "," "]]
     add_pieces
   end
 
@@ -49,25 +52,101 @@ class Board
   end
 
   def display
+    row_number = ["8", "7", "6", "5", "4", "3", "2", "1"]
+    column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+
     puts "\n"
     horizontal_line
+    counter = 0
     @board.each do |row|
-      print " | "
+      print " #{row_number[counter]} | "
       row.each do |square|
         if square == " "
           print square
         else
-          print square.icon
+          print square.symbol
         end
         print " | "
       end
+      counter += 1
       puts ""
       horizontal_line
     end
-    puts "\n"
+    print "     "
+    column_letter.each do |letter|
+      print letter
+      print "   "
+    end
+    puts "\n\n"
   end
 
   def horizontal_line
+    print "  "
     puts ' -' * 17
+  end
+
+  def select
+    x, y = input_coordinates("Select square")
+    @selected_piece = @board[y][x]
+    @selected_coordinates = [x, y]
+    identify(x, y)
+
+  end
+
+  def input_coordinates(text)
+    print text
+    print " (i.e. b5) or c to cancel: "
+    result = gets.chomp
+    return if result == "c"
+    x, y = convert(result)
+    return x, y
+  end
+
+  def convert(string)
+    grid_map = {"a" => 0, "b" => 1, "c" => 2, "d" => 3,
+                "e" => 4, "f" => 5, "g" => 6, "h" => 7,
+                "1" => 7, "2" => 6, "3" => 5, "4" => 4,
+                "5" => 3, "6" => 2, "7" => 1, "8" => 0}
+    x = grid_map[string[0]]
+    y = grid_map[string[1]]
+    return x, y
+  end
+
+  def identify(x, y)
+    square = @board[y][x]
+    if square == " "
+      puts "You have selected nothing"
+    else
+      puts "You have selected #{square.color} #{square.name}"
+    end
+  end
+
+  def start
+    game
+
+  end
+
+  def game
+    loop do
+      display
+      select
+      move
+    end
+  end
+
+  def move
+    if @selected_piece == nil
+      puts "You need to select a square first"
+    elsif @selected_piece == " "
+      puts "There is nothing here!"
+    else
+      x, y = input_coordinates("Choose square to move to")
+      @board[y][x] = @selected_piece
+      @board[y][x].location = [x, y]
+      @board[selected_coordinates[1]][selected_coordinates[0]] = " "
+      @selected_piece = nil
+      @selected_coordinates = nil
+    end
   end
 end

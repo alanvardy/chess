@@ -1,14 +1,14 @@
 class Piece
-  def move
-    @moves
-  end
-  def icon
-    @symbol
-  end
+  attr_reader :symbol, :color, :name
+  attr_accessor :location
+  # def icon
+  #   @symbol
+  # end
 end
 
 class King < Piece
   def initialize(color, location)
+    @name = "king"
     @moved = 1
     @color = color
     @location = location
@@ -25,6 +25,7 @@ end
 
 class Queen < Piece
   def initialize(color, location)
+    @name = "queen"
     @moved = 1
     @color = color
     @location = location
@@ -47,6 +48,7 @@ end
 
 class Rook < Piece
   def initialize(color, location)
+    @name = "rook"
     @moved = 1
     @color = color
     @location = location
@@ -65,6 +67,7 @@ end
 
 class Bishop < Piece
   def initialize(color, location)
+    @name = "bishop"
     @moved = 1
     @color = color
     @location = location
@@ -83,6 +86,7 @@ end
 
 class Knight < Piece
   def initialize(color, location)
+    @name = "knight"
     @moved = 1
     @color = color
     @location = location
@@ -98,6 +102,7 @@ end
 
 class Pawn < Piece
   def initialize(color, location)
+    @name = "pawn"
     @moved = 0
     @color = color
     @location = location
