@@ -89,13 +89,19 @@ class Board
     puts ' -' * 17
   end
 
-  def select
-    y, x = input_coordinates("Select square")
-    return if y.nil?
-    @selected_piece = @board[y][x]
-    @selected_coordinates = [y, x]
-    identify(y, x)
-
+  def select_square
+    loop do
+      y, x = input_coordinates("#{@player_turn.name}: Select piece")
+      return if y.nil?
+      if @board[y][x].color == @player_turn.color
+        @selected_piece = @board[y][x]
+        @selected_coordinates = [y, x]
+        identify(y, x)
+        return
+      else
+        puts "You need to choose a #{@player_turn.color} piece"
+      end
+    end
   end
 
   def input_coordinates(text)
@@ -146,14 +152,14 @@ class Board
     @white_player = Player.new(name, "white")
     print "Enter name black player: "
     name = gets.chomp
-    @white_player = Player.new(name, "black")
+    @black_player = Player.new(name, "black")
     @player_turn = @white_player
   end
 
   def game
     loop do
       display
-      select
+      select_square
       clear_screen
       display
       move
