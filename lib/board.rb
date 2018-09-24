@@ -136,8 +136,18 @@ class Board
   end
 
   def start
+    create_players
     game
+  end
 
+  def create_players
+    print "Enter name white player: "
+    name = gets.chomp
+    @white_player = Player.new(name, "white")
+    print "Enter name black player: "
+    name = gets.chomp
+    @white_player = Player.new(name, "black")
+    @player_turn = @white_player
   end
 
   def game
@@ -148,6 +158,15 @@ class Board
       display
       move
       clear_screen
+      change_player
+    end
+  end
+
+  def change_player
+    if @player_turn == @white_player
+      @player_turn = @black_player
+    else
+      @player_turn = @white_player
     end
   end
 
