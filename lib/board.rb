@@ -1,4 +1,5 @@
 require_relative 'pieces'
+require_relative 'players'
 
 class Board
   attr_accessor :board, :selected_piece, :selected_coordinates
