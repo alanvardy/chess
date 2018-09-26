@@ -1,8 +1,28 @@
 require 'board'
 
 describe Board do
+  before do
+    allow($stdout).to receive(:write)
+  end
+
+  let(:board) { board ||= Board.new }
+
   describe 'when initialized' do
-    pending 'todo'
+    context 'it first' do
+      it 'creates an error array' do
+        expect(board.errors).to be_an_instance_of(Array)
+      end
+    end
+    it 'creates the board' do
+      expect(board.board).to eq([[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                                 [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']])
+    end
   end
 
   describe '#add_pieces' do

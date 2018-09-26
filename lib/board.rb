@@ -3,6 +3,7 @@ require_relative 'players'
 
 class Board
   attr_accessor :board, :selected_piece, :selected_coordinates
+  attr_reader :errors
   def initialize
     @errors = []
     @selected_piece = nil
@@ -15,7 +16,6 @@ class Board
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "]]
-    add_pieces
   end
 
   def add_pieces
@@ -142,6 +142,7 @@ class Board
   end
 
   def start
+    add_pieces
     create_players
     game
   end
