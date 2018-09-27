@@ -99,7 +99,24 @@ describe Board do
   end
 
   describe '#start' do
-    pending 'todo'
+    it 'calls #add_pieces' do
+      expect(board).to receive(:add_pieces)
+      allow(board).to receive(:create_players)
+      allow(board).to receive(:game)
+      board.start
+    end
+    it 'calls #create_players' do
+      allow(board).to receive(:add_pieces)
+      expect(board).to receive(:create_players)
+      allow(board).to receive(:game)
+      board.start
+    end
+    it 'calls #game' do
+      allow(board).to receive(:add_pieces)
+      allow(board).to receive(:create_players)
+      expect(board).to receive(:game)
+      board.start
+    end
   end
 
   describe '#create_players' do
