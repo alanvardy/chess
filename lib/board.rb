@@ -148,13 +148,16 @@ class Board
   end
 
   def create_players
-    print "Enter name white player: "
-    name = gets.chomp
+    name = input("Enter name white player: ")
     @white_player = Player.new(name, "white")
-    print "Enter name black player: "
-    name = gets.chomp
+    name = input("Enter name black player: ")
     @black_player = Player.new(name, "black")
     @player_turn = @white_player
+  end
+
+  def input(text)
+    print text
+    gets.chomp
   end
 
   def game
