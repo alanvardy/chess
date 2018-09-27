@@ -83,15 +83,15 @@ describe Board do
   end
 
   describe '#input_coordinates' do
+    pending 'todo'
+  end
+
+  describe '#convert' do
     context 'when given valid input' do
       it 'returns 2 valid integers' do
         expect(board.convert('b3')).to eq([2, 1])
       end
     end
-  end
-
-  describe '#convert' do
-    pending 'todo'
   end
 
   describe '#identify' do
