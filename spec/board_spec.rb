@@ -124,7 +124,17 @@ describe Board do
   end
 
   describe '#game' do
-    pending 'todo'
+    context 'until won? is false' do
+      it 'loops twice' do
+        expect(board).to receive(:won?).twice.and_return(false, true)
+        allow(board).to receive(:display)
+        allow(board).to receive(:select_square)
+        allow(board).to receive(:clear_screen)
+        allow(board).to receive(:move)
+        allow(board).to receive(:change_player)
+        board.game
+      end
+    end
   end
 
   describe '#change_player' do

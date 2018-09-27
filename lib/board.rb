@@ -107,9 +107,7 @@ class Board
   def input_coordinates(text)
     result = ""
     loop do
-      print text
-      print " (i.e. b5) or c to cancel: "
-      result = gets.chomp
+      result = input(text + " (i.e. b5) or c to cancel: ")
       break if result =~ /^[a-h][1-8]$/ || result == "c"
       @errors << "Bad input!"
       return nil
@@ -161,7 +159,7 @@ class Board
   end
 
   def game
-    loop do
+    until won? do
       display
       select_square
       clear_screen
@@ -170,6 +168,10 @@ class Board
       clear_screen
       change_player
     end
+  end
+
+  def won?
+    true
   end
 
   def change_player
