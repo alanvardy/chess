@@ -7,6 +7,7 @@ class Board
   attr_reader :errors
   def initialize
     @errors = []
+    @turn_complete = true
     clear_selection
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -54,6 +55,7 @@ class Board
   end
 
   def display
+    clear_screen
     row_number = ["1", "2", "3", "4", "5", "6", "7", "8"]
     column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
     puts "\n"
@@ -79,9 +81,7 @@ class Board
       print "   "
     end
     puts "\n\n"
-    while @errors.length > 0
-      puts @errors.pop
-    end
+    print_errors
   end
 
   def horizontal_line
@@ -89,14 +89,24 @@ class Board
     puts ' -' * 17
   end
 
+  def print_errors
+    while @errors.length > 0
+      puts @errors.pop
+    end
+  end
+
   def select_square
     loop do
+      print_errors
       y, x = input_coordinates("#{@player_turn.name}: Select piece")
-      return if y.nil?
-      if @board[y][x].color == @player_turn.color
-        @selected_piece = @board[y][x]
+      next if y.nil?
+      selected = @board[y][x]
+      if selected == " "
+        @errors << "You selected a blank square"
+      elsif selected.color == @player_turn.color
+        @selected_piece = selected
         @selected_coordinates = [y, x]
-        identify(y, x)
+        puts "You have selected #{selected.color} #{selected.name}"
         return
       else
         puts "You need to choose a #{@player_turn.color} piece"
@@ -108,16 +118,12 @@ class Board
     result = ""
     loop do
       result = input(text + " (i.e. b5) or c to cancel: ")
-      break if result =~ /^[a-h][1-8]$/ || result == "c"
+      break if result =~ /^[a-h][1-8]$/
       @errors << "Bad input!"
       return nil
     end
-    if result == "c"
-      return nil
-    else
-      y, x = convert(result)
-      return y, x
-    end
+    y, x = convert(result)
+    return y, x
   end
 
   def convert(string)
@@ -130,19 +136,9 @@ class Board
     return y, x
   end
 
-  def identify(y, x)
-    square = @board[y][x]
-    if square == " "
-      @errors << "You have selected nothing"
-    else
-      puts "You have selected #{square.color} #{square.name}"
-    end
-  end
-
   def start
     add_pieces
     create_players
-    clear_screen
     game
   end
 
@@ -151,7 +147,6 @@ class Board
     @white_player = Player.new(name, "white")
     name = input("Enter name black player: ")
     @black_player = Player.new(name, "black")
-    @player_turn = @white_player
   end
 
   def input(text)
@@ -161,13 +156,11 @@ class Board
 
   def game
     until won? do
+      change_player
       display
       select_square
-      clear_screen
       display
       move
-      clear_screen
-      change_player
     end
   end
 
@@ -176,18 +169,17 @@ class Board
   end
 
   def change_player
-    if @player_turn == @white_player
+    if @player_turn == @white_player && @turn_complete
       @player_turn = @black_player
-    else
+      @turn_complete = false
+    elsif @turn_complete
       @player_turn = @white_player
+      @turn_complete = false
     end
   end
 
   def move
-    if @selected_piece == nil
-      @errors << "You need to select a square first"
-      clear_selection
-    elsif @selected_piece == " "
+    if @selected_piece.nil?
       @errors << "There is nothing here!"
       clear_selection
     else
@@ -209,6 +201,7 @@ class Board
     @board[y][x] = @selected_piece
     @board[y][x].location = [y, x]
     @board[selected_coordinates[0]][selected_coordinates[1]] = " "
+    @turn_complete = true
     clear_selection
   end
 
