@@ -138,17 +138,30 @@ describe Board do
   end
 
   describe '#change_player' do
-    pending 'todo'
+    context 'when white players turn' do
+      it 'sets turn to black players' do
+        board.instance_variable_set(:@player_turn, "1")
+        board.instance_variable_set(:@white_player, "1")
+        board.instance_variable_set(:@black_player, "2")
+        board.change_player
+        expect(board.player_turn).to eq("2")
+      end
+    end
+    context 'when not white players turn' do
+      it 'sets turn to white players' do
+        board.instance_variable_set(:@player_turn, "3")
+        board.instance_variable_set(:@white_player, "1")
+        board.instance_variable_set(:@black_player, "2")
+        board.change_player
+        expect(board.player_turn).to eq("1")
+      end
+    end
   end
 
   describe '#move' do
   end
 
   describe '#valid_move?' do
-    pending 'todo'
-  end
-
-  describe '#clear_screen' do
     pending 'todo'
   end
 end

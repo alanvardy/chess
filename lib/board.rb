@@ -2,7 +2,8 @@ require_relative 'pieces'
 require_relative 'players'
 
 class Board
-  attr_accessor :board, :selected_piece, :selected_coordinates
+  attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
+                :white_player, :black_player
   attr_reader :errors
   def initialize
     @errors = []
