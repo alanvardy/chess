@@ -55,6 +55,7 @@ class Board
   end
 
   def display
+    clear_screen
     row_number = ["1", "2", "3", "4", "5", "6", "7", "8"]
     column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
     puts "\n"
@@ -149,7 +150,6 @@ class Board
   def start
     add_pieces
     create_players
-    clear_screen
     game
   end
 
@@ -170,10 +170,8 @@ class Board
       change_player
       display
       select_square
-      clear_screen
       display
       move
-      clear_screen
     end
   end
 
@@ -195,7 +193,6 @@ class Board
     if @selected_piece.nil?
       @errors << "There is nothing here!"
       clear_selection
-      select_square
     else
       y, x = input_coordinates("Choose square to move to")
       if valid_move?(y, x)
