@@ -172,7 +172,7 @@ class Board
   end
 
   def won?
-    true
+    false
   end
 
   def change_player
