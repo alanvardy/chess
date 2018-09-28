@@ -187,7 +187,9 @@ describe Board do
     end
     context 'when a piece is selected' do
       it 'calls input_coordinates' do
-        
+        expect(board).to receive(:input_coordinates)
+        board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
+        board.move
       end
 
       context 'if move is valid' do
