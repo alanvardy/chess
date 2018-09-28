@@ -7,8 +7,7 @@ class Board
   attr_reader :errors
   def initialize
     @errors = []
-    @selected_piece = nil
-    @selected_coordinates = nil
+    clear_selection
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -209,8 +208,7 @@ class Board
     @board[y][x] = @selected_piece
     @board[y][x].location = [y, x]
     @board[selected_coordinates[0]][selected_coordinates[1]] = " "
-    @selected_piece = nil
-    @selected_coordinates = nil
+    clear_selection
   end
 
   def valid_move?(y, x)

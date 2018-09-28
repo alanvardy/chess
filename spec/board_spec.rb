@@ -194,19 +194,42 @@ describe Board do
 
       context 'if move is valid' do
         it 'calls move_piece' do
-
+          board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
+          allow(board).to receive(:input_coordinates)
+          allow(board).to receive(:valid_move?).and_return(true)
+          expect(board).to receive(:move_piece)
+          board.move
         end
       end
       context 'if move is not valid' do
-        it 'sets @selected_piece to nil' do
-
-        end
-
-        it 'sets @selected_coordinates to nil' do
-
+        it 'calls clear_selection' do
+          board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
+          allow(board).to receive(:input_coordinates)
+          allow(board).to receive(:valid_move?).and_return(false)
+          expect(board).to receive(:clear_selection)
+          board.move
         end
       end
     end
+  end
+
+  describe '#clear_selection' do
+    before do
+      board.instance_variable_set(:@selected_piece, "test")
+      board.instance_variable_set(:@selected_coordinates, "test")
+      board.clear_selection
+    end
+    it 'clears @selected_piece' do
+      expect(board.selected_piece).to be_nil
+    end
+    it 'clears @selected_coordinates' do
+      expect(board.selected_coordinates).to be_nil
+    end
+
+  end
+
+  describe '#move_piece' do
+    pending 'todo'
   end
 
   describe '#valid_move?' do
