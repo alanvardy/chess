@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'pieces'
 
 describe Piece do
@@ -27,4 +28,3 @@ end
 describe Pawn do
   pending 'todo'
 end
-

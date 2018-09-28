@@ -2,11 +2,12 @@ require_relative 'pieces'
 require_relative 'players'
 
 class Board
-  attr_accessor :board, :selected_piece, :selected_coordinates
+  attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
+                :white_player, :black_player
+  attr_reader :errors
   def initialize
     @errors = []
-    @selected_piece = nil
-    @selected_coordinates = nil
+    clear_selection
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -15,7 +16,6 @@ class Board
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "]]
-    add_pieces
   end
 
   def add_pieces
@@ -107,9 +107,7 @@ class Board
   def input_coordinates(text)
     result = ""
     loop do
-      print text
-      print " (i.e. b5) or c to cancel: "
-      result = gets.chomp
+      result = input(text + " (i.e. b5) or c to cancel: ")
       break if result =~ /^[a-h][1-8]$/ || result == "c"
       @errors << "Bad input!"
       return nil
@@ -142,22 +140,27 @@ class Board
   end
 
   def start
+    add_pieces
     create_players
+    clear_screen
     game
   end
 
   def create_players
-    print "Enter name white player: "
-    name = gets.chomp
+    name = input("Enter name white player: ")
     @white_player = Player.new(name, "white")
-    print "Enter name black player: "
-    name = gets.chomp
+    name = input("Enter name black player: ")
     @black_player = Player.new(name, "black")
     @player_turn = @white_player
   end
 
+  def input(text)
+    print text
+    gets.chomp
+  end
+
   def game
-    loop do
+    until won? do
       display
       select_square
       clear_screen
@@ -166,6 +169,10 @@ class Board
       clear_screen
       change_player
     end
+  end
+
+  def won?
+    false
   end
 
   def change_player
@@ -179,21 +186,30 @@ class Board
   def move
     if @selected_piece == nil
       @errors << "You need to select a square first"
+      clear_selection
     elsif @selected_piece == " "
       @errors << "There is nothing here!"
+      clear_selection
     else
       y, x = input_coordinates("Choose square to move to")
       if valid_move?(y, x)
-        @board[y][x] = @selected_piece
-        @board[y][x].location = [y, x]
-        @board[selected_coordinates[0]][selected_coordinates[1]] = " "
-        @selected_piece = nil
-        @selected_coordinates = nil
+        move_piece(y,x)
       else
-        @selected_piece = nil
-        @selected_coordinates = nil
+        clear_selection
       end
     end
+  end
+
+  def clear_selection
+    @selected_piece = nil
+    @selected_coordinates = nil
+  end
+
+  def move_piece(y, x)
+    @board[y][x] = @selected_piece
+    @board[y][x].location = [y, x]
+    @board[selected_coordinates[0]][selected_coordinates[1]] = " "
+    clear_selection
   end
 
   def valid_move?(y, x)
