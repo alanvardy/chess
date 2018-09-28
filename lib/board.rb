@@ -7,6 +7,7 @@ class Board
   attr_reader :errors
   def initialize
     @errors = []
+    @turn_complete = true
     clear_selection
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -157,7 +158,6 @@ class Board
     @white_player = Player.new(name, "white")
     name = input("Enter name black player: ")
     @black_player = Player.new(name, "black")
-    @player_turn = @white_player
   end
 
   def input(text)
@@ -167,13 +167,13 @@ class Board
 
   def game
     until won? do
+      change_player
       display
       select_square
       clear_screen
       display
       move
       clear_screen
-      change_player
     end
   end
 
@@ -182,10 +182,12 @@ class Board
   end
 
   def change_player
-    if @player_turn == @white_player
+    if @player_turn == @white_player && turn_complete
       @player_turn = @black_player
-    else
+      @turn_complete = false
+    elsif turn_complete
       @player_turn = @white_player
+      @turn_complete = false
     end
   end
 
@@ -213,6 +215,7 @@ class Board
     @board[y][x] = @selected_piece
     @board[y][x].location = [y, x]
     @board[selected_coordinates[0]][selected_coordinates[1]] = " "
+    @turn_complete = true
     clear_selection
   end
 
