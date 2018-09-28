@@ -191,16 +191,20 @@ class Board
     else
       y, x = input_coordinates("Choose square to move to")
       if valid_move?(y, x)
-        @board[y][x] = @selected_piece
-        @board[y][x].location = [y, x]
-        @board[selected_coordinates[0]][selected_coordinates[1]] = " "
-        @selected_piece = nil
-        @selected_coordinates = nil
+        move_piece(y,x)
       else
         @selected_piece = nil
         @selected_coordinates = nil
       end
     end
+  end
+
+  def move_piece(y, x)
+    @board[y][x] = @selected_piece
+    @board[y][x].location = [y, x]
+    @board[selected_coordinates[0]][selected_coordinates[1]] = " "
+    @selected_piece = nil
+    @selected_coordinates = nil
   end
 
   def valid_move?(y, x)

@@ -159,6 +159,14 @@ describe Board do
   end
 
   describe '#move' do
+    context 'when selected_piece is nil or " "' do
+
+    end
+    context 'when a piece is selected' do
+      it 'calls input_coordinates' do
+        
+      end
+    end
   end
 
   describe '#valid_move?' do
