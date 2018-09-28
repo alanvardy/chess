@@ -79,14 +79,18 @@ class Board
       print "   "
     end
     puts "\n\n"
-    while @errors.length > 0
-      puts @errors.pop
-    end
+    print_errors
   end
 
   def horizontal_line
     print "  "
     puts ' -' * 17
+  end
+
+  def print_errors
+    while @errors.length > 0
+      puts @errors.pop
+    end
   end
 
   def select_square
