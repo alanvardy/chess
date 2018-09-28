@@ -160,31 +160,20 @@ describe Board do
 
   describe '#move' do
     context 'when @selected_piece is nil' do
-      it 'creates an error' do
+      before do
+        allow(board).to receive(:select_square)
         board.instance_variable_set(:@selected_piece, nil)
         board.move
+      end
+      it 'creates an error' do
         expect(board.errors.length).to eq(1)
       end
 
       it 'doesn\'t call input coordinates' do
         expect(board).to_not receive(:input_coordinates)
-        board.instance_variable_set(:@selected_piece, nil)
-        board.move
       end
     end
-    context 'when @selected_piece is " "' do
-      it 'creates an error' do
-        board.instance_variable_set(:@selected_piece, " ")
-        board.move
-        expect(board.errors.length).to eq(1)
-      end
 
-      it 'doesn\'t call input coordinates' do
-        expect(board).to_not receive(:input_coordinates)
-        board.instance_variable_set(:@selected_piece, " ")
-        board.move
-      end
-    end
     context 'when a piece is selected' do
       it 'calls input_coordinates' do
         expect(board).to receive(:input_coordinates)

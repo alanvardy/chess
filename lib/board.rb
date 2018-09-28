@@ -190,12 +190,10 @@ class Board
   end
 
   def move
-    if @selected_piece == nil
-      @errors << "You need to select a square first"
-      clear_selection
-    elsif @selected_piece == " "
+    if @selected_piece.nil?
       @errors << "There is nothing here!"
       clear_selection
+      select_square
     else
       y, x = input_coordinates("Choose square to move to")
       if valid_move?(y, x)
