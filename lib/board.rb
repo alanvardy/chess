@@ -60,18 +60,22 @@ class Board
     column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
     puts "\n"
     horizontal_line
-    counter = 0
+    yref = 0
     @board.each do |row|
-      print " #{row_number[counter]} | "
+      print " #{row_number[yref]} |"
+      xref = 0
       row.each do |square|
         if square == " "
-          print square
+          print "   "
+        elsif selected_square?(yref, xref)
+          print "|#{square.symbol}|"
         else
-          print square.symbol
+          print " #{square.symbol} "
         end
-        print " | "
+        print "|"
+        xref += 1
       end
-      counter += 1
+      yref += 1
       puts ""
       horizontal_line
     end
@@ -92,6 +96,16 @@ class Board
   def print_errors
     while @errors.length > 0
       puts @errors.pop
+    end
+  end
+
+  def selected_square?(y, x)
+    if @selected_coordinates.nil?
+      false
+    elsif @selected_coordinates[0] == y && @selected_coordinates[1] == x
+      true
+    else
+      false
     end
   end
 
