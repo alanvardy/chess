@@ -255,6 +255,15 @@ describe Board do
   end
 
   describe '#valid_move?' do
-    pending 'todo'
+    context 'when move is valid' do
+      it 'returns true' do
+
+      end
+    end
+    context 'when move is not valid' do
+      it 'returns false' do
+
+      end
+    end
   end
 end
