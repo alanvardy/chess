@@ -100,14 +100,14 @@ class Board
       print_errors
       y, x = input_coordinates("#{@player_turn.name}: Select piece")
       next if y.nil?
-      return if y == "c"
       selected = @board[y][x]
       if selected == " "
         @errors << "You selected a blank square"
       elsif selected.color == @player_turn.color
         @selected_piece = selected
         @selected_coordinates = [y, x]
-        puts "You have selected #{square.color} #{square.name}"
+        puts "You have selected #{selected.color} #{selected.name}"
+        return
       else
         puts "You need to choose a #{@player_turn.color} piece"
       end
@@ -118,16 +118,12 @@ class Board
     result = ""
     loop do
       result = input(text + " (i.e. b5) or c to cancel: ")
-      break if result =~ /^[a-h][1-8]$/ || result == "c"
+      break if result =~ /^[a-h][1-8]$/
       @errors << "Bad input!"
       return nil
     end
-    if result == "c"
-      return "c"
-    else
-      y, x = convert(result)
-      return y, x
-    end
+    y, x = convert(result)
+    return y, x
   end
 
   def convert(string)
