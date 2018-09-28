@@ -42,10 +42,6 @@ describe Board do
     # end
   end
 
-  describe '#horizontal_line' do
-    pending 'todo'
-  end
-
   describe '#select_square' do
     before do
       board.instance_variable_set(:@player_turn, Player.new('Test', 'black'))
@@ -67,10 +63,6 @@ describe Board do
         expect(board.convert('b3')).to eq([2, 1])
       end
     end
-  end
-
-  describe '#identify' do
-    pending 'todo'
   end
 
   describe '#start' do
