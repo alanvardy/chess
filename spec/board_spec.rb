@@ -55,31 +55,6 @@ describe Board do
       expect(board).to receive(:input_coordinates).and_return("c")
       board.select_square
     end
-
-    it 'calls input_coordinates again if y is nil' do
-      allow(board).to receive(:input_coordinates).twice.and_return(nil, "c")
-      expect(board).not_to receive(:identify)
-      board.select_square
-    end
-    context 'when piece color matches player color' do
-      it 'calls #identify' do
-        allow(board).to receive(:input_coordinates).and_return([0, 0])
-        expect(board).to receive(:identify).with(0, 0)
-        board.select_square
-      end
-    end
-    context 'when piece color doesn\'t match players' do
-      it 'doesn\'t call #identify' do
-        allow(board).to receive(:input_coordinates).and_return([7, 7], "c")
-        expect(board).not_to receive(:identify)
-        board.select_square
-      end
-
-      it 'calls input_coordinates again' do
-        expect(board).to receive(:input_coordinates).twice.and_return([7, 7], "c")
-        board.select_square
-      end
-    end
   end
 
   describe '#input_coordinates' do

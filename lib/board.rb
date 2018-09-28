@@ -101,11 +101,13 @@ class Board
       y, x = input_coordinates("#{@player_turn.name}: Select piece")
       next if y.nil?
       return if y == "c"
-      if @board[y][x].color == @player_turn.color
-        @selected_piece = @board[y][x]
+      selected = @board[y][x]
+      if selected == " "
+        @errors << "You selected a blank square"
+      elsif selected.color == @player_turn.color
+        @selected_piece = selected
         @selected_coordinates = [y, x]
-        identify(y, x)
-        return
+        puts "You have selected #{square.color} #{square.name}"
       else
         puts "You need to choose a #{@player_turn.color} piece"
       end
@@ -136,15 +138,6 @@ class Board
     x = grid_map[string[0]]
     y = grid_map[string[1]]
     return y, x
-  end
-
-  def identify(y, x)
-    square = @board[y][x]
-    if square == " "
-      @errors << "You have selected nothing"
-    else
-      puts "You have selected #{square.color} #{square.name}"
-    end
   end
 
   def start
@@ -180,10 +173,10 @@ class Board
   end
 
   def change_player
-    if @player_turn == @white_player && turn_complete
+    if @player_turn == @white_player && @turn_complete
       @player_turn = @black_player
       @turn_complete = false
-    elsif turn_complete
+    elsif @turn_complete
       @player_turn = @white_player
       @turn_complete = false
     end
