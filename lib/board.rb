@@ -142,6 +142,7 @@ class Board
   def start
     add_pieces
     create_players
+    clear_screen
     game
   end
 

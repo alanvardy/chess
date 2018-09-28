@@ -229,7 +229,29 @@ describe Board do
   end
 
   describe '#move_piece' do
-    pending 'todo'
+    before do
+      board.instance_variable_set(:@selected_piece, Pawn.new("White", [4, 5]))
+      board.instance_variable_set(:@selected_coordinates, [4, 5])
+      board.move_piece(1, 2)
+    end
+    it 'moves the piece to the new location' do
+      expect(board.board[1][2].color).to eql("White")
+    end
+
+    it 'sets the location in the piece' do
+      expect(board.board[1][2].location).to eql([1, 2])
+    end
+
+    it 'sets the old location back to blank' do
+      expect(board.board[4][5]).to eql(" ")
+    end
+
+    it 'calls clear_selection' do
+      board.instance_variable_set(:@selected_piece, Pawn.new("White", [4, 5]))
+      board.instance_variable_set(:@selected_coordinates, [4, 5])
+      expect(board).to receive(:clear_selection)
+      board.move_piece(1, 2)
+    end
   end
 
   describe '#valid_move?' do
