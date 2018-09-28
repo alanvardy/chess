@@ -131,7 +131,7 @@ class Board
   def input_coordinates(text)
     result = ""
     loop do
-      result = input(text + " (i.e. b5) or c to cancel: ")
+      result = input(text + " (i.e. b5):")
       break if result =~ /^[a-h][1-8]$/
       @errors << "Bad input!"
       return nil
