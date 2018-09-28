@@ -255,14 +255,17 @@ describe Board do
   end
 
   describe '#valid_move?' do
+    before do
+      board.instance_variable_set(:@selected_piece, Queen.new("White", [0, 0]))
+    end
     context 'when move is valid' do
       it 'returns true' do
-
+        expect(board.valid_move?(2, 0)).to be(true)
       end
     end
     context 'when move is not valid' do
       it 'returns false' do
-
+        expect(board.valid_move?(2, 1)).to be(false)
       end
     end
   end
