@@ -95,8 +95,10 @@ class Board
 
   def select_square
     loop do
+      print_errors
       y, x = input_coordinates("#{@player_turn.name}: Select piece")
-      return if y.nil?
+      next if y.nil?
+      return if y == "c"
       if @board[y][x].color == @player_turn.color
         @selected_piece = @board[y][x]
         @selected_coordinates = [y, x]
@@ -117,7 +119,7 @@ class Board
       return nil
     end
     if result == "c"
-      return nil
+      return "c"
     else
       y, x = convert(result)
       return y, x
