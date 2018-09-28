@@ -52,7 +52,7 @@ describe Board do
       board.add_pieces
     end
     it 'calls input_coordinates' do
-      expect(board).to receive(:input_coordinates).and_return("c")
+      expect(board).to receive(:input_coordinates).and_return([0,0])
       board.select_square
     end
   end
