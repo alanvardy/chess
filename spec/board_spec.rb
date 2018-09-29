@@ -208,11 +208,24 @@ describe Board do
         board.move
       end
 
+      context 'when attack is valid' do
+        it 'calls attack_piece' do
+          board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
+          allow(board).to receive(:input_coordinates)
+          allow(board).to receive(:valid_move?).and_return(false)
+          allow(board).to receive(:valid_attack?).and_return(true)
+          allow(board).to receive(:opposing_piece?).and_return(true)
+          expect(board).to receive(:attack_piece)
+          board.move
+        end
+      end
+
       context 'if move is valid' do
         it 'calls move_piece' do
           board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
           allow(board).to receive(:input_coordinates)
           allow(board).to receive(:valid_move?).and_return(true)
+          allow(board).to receive(:valid_attack?).and_return(false)
           expect(board).to receive(:move_piece)
           board.move
         end
@@ -222,6 +235,7 @@ describe Board do
           board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
           allow(board).to receive(:input_coordinates)
           allow(board).to receive(:valid_move?).and_return(false)
+          allow(board).to receive(:valid_attack?).and_return(false)
           expect(board).to receive(:clear_selection)
           board.move
         end
