@@ -176,6 +176,7 @@ class Board
       display
       move
     end
+    declare_winner
   end
 
   def won?
@@ -191,6 +192,10 @@ class Board
       end
     end
     false
+  end
+
+  def declare_winner
+    puts "PUT SOMETHING HERE"
   end
 
   def change_player

@@ -106,7 +106,18 @@ describe Board do
   end
 
   describe '#won?' do
-    pending 'todo'
+    context 'when both players have kings' do
+      it 'returns false' do
+        allow(board).to receive(:has_king?).and_return(true)
+        expect(board.won?).to be(false)
+      end
+    end
+    context 'when one player has no king' do
+      it 'returns true' do
+        allow(board).to receive(:has_king?).and_return(false, true)
+        expect(board.won?).to be(true)
+      end
+    end
   end
 
   describe '#has_king?' do
