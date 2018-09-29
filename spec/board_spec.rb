@@ -28,19 +28,30 @@ describe Board do
   end
 
   describe '#add_pieces' do
-    pending 'todo'
-    # it 'creates 32 pieces' do
-    #   expect(board).to receive(:board).exactly(32).times
-    #   board.add_pieces
-    # end
+    it 'creates pieces' do
+      board.add_pieces
+      expect(board.board[0][0].is_a?(Piece)).to be(true)
+    end
+    it 'leaves empty spaces in the middle' do
+      expect(board.board[2][2]).to eq(" ")
+    end
   end
 
   describe '#display' do
-    pending 'todo'
-    # it 'prints errors' do
-    #   expect(board.row_number).to eq(%w[1 2 3 4 5 6 7 8])
-    #   board.display
-    # end
+    it 'calls clear_screen' do
+      expect(board).to receive(:clear_screen).once
+      board.display
+    end
+
+    it 'calls horizontal_lines' do
+      expect(board).to receive(:horizontal_line).at_least(:twice)
+      board.display
+    end
+
+    it 'calls print_errors' do
+      expect(board).to receive(:print_errors).once
+      board.display
+    end
   end
 
   describe '#select_square' do
@@ -88,7 +99,16 @@ describe Board do
   end
 
   describe '#create_players' do
-    pending 'todo'
+    before do
+      allow(board).to receive(:input).and_return("Test")
+      board.create_players
+    end
+    it 'creates white player' do
+      expect(board.white_player.is_a?(Player)).to be(true)
+    end
+    it 'creates white player' do
+      expect(board.black_player.is_a?(Player)).to be(true)
+    end
   end
 
   describe '#game' do
@@ -100,6 +120,7 @@ describe Board do
         allow(board).to receive(:clear_screen)
         allow(board).to receive(:move)
         allow(board).to receive(:change_player)
+        allow(board).to receive(:declare_winner)
         board.game
       end
     end
@@ -134,6 +155,15 @@ describe Board do
     end
   end
 
+  describe '#declare_winner' do
+    it 'calls has_king? twice' do
+      board.instance_variable_set(:@white_player, Player.new("Test", "Purple"))
+      board.instance_variable_set(:@black_player, Player.new("Test", "Purple"))
+      expect(board).to receive(:has_king?).twice
+      board.declare_winner
+    end
+  end
+
   describe '#change_player' do
     context 'when white players turn' do
       it 'sets turn to black players' do
@@ -162,9 +192,6 @@ describe Board do
         board.instance_variable_set(:@selected_piece, nil)
         board.move
       end
-      it 'creates an error' do
-        expect(board.errors.length).to eq(1)
-      end
 
       it 'doesn\'t call input coordinates' do
         expect(board).to_not receive(:input_coordinates)
@@ -175,6 +202,9 @@ describe Board do
       it 'calls input_coordinates' do
         expect(board).to receive(:input_coordinates)
         board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
+        allow(board).to receive(:valid_attack?).and_return(false)
+        allow(board).to receive(:opposing_piece?).and_return(false)
+        allow(board).to receive(:valid_move?).and_return(false)
         board.move
       end
 
@@ -199,6 +229,28 @@ describe Board do
     end
   end
 
+  describe '#opposing_piece?' do
+    before do
+      board.add_pieces
+      board.instance_variable_set(:@selected_piece, board.board[0][0])
+    end
+    context 'when not a piece' do
+      it 'returns false' do
+        expect(board.opposing_piece?(2, 2)).to be(false)
+      end
+    end
+    context 'when same color as player' do
+      it 'returns false' do
+        expect(board.opposing_piece?(0, 1)).to be(false)
+      end
+    end
+    context 'when a piece of another color' do
+      it 'returns true' do
+        expect(board.opposing_piece?(7, 7)).to be(true)
+      end
+    end
+  end
+
   describe '#clear_selection' do
     before do
       board.instance_variable_set(:@selected_piece, "test")
@@ -212,6 +264,10 @@ describe Board do
       expect(board.selected_coordinates).to be_nil
     end
 
+  end
+
+  describe '#attack_piece' do
+    pending 'todo'
   end
 
   describe '#move_piece' do
@@ -240,6 +296,27 @@ describe Board do
     end
   end
 
+  describe '#valid_attack?' do
+    before do
+      board.add_pieces
+      board.instance_variable_set(:@selected_piece, board.board[0][0])
+    end
+    context 'if in list of attacks' do
+      it 'returns true' do
+        expect(board.valid_attack?(7, 0)).to be(true)
+      end
+    end
+    context 'if not in list of attacks' do
+      it 'returns false' do
+        expect(board.valid_attack?(7, 1)).to be(false)
+      end
+      it 'adds an error' do
+        board.valid_attack?(7, 1)
+        expect(board.errors.length).to eq(1)
+      end
+    end
+  end
+
   describe '#valid_move?' do
     before do
       board.instance_variable_set(:@selected_piece, Queen.new("White", [0, 0]))
@@ -252,6 +329,19 @@ describe Board do
     context 'when move is not valid' do
       it 'returns false' do
         expect(board.valid_move?(2, 1)).to be(false)
+      end
+    end
+    context 'when destination selected is the same color piece' do
+      before do
+        board.add_pieces
+        board.instance_variable_set(:@selected_piece, board.board[0][0])
+      end
+      it 'returns false' do
+        expect(board.valid_move?(0, 1)).to be(false)
+      end
+      it 'adds an error' do
+        board.valid_move?(0, 1)
+        expect(board.errors.length).to eq(1)
       end
     end
   end

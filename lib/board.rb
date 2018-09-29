@@ -117,6 +117,7 @@ class Board
       selected = @board[y][x]
       if selected == " "
         @errors << "You selected a blank square"
+        clear_selection
       elsif selected.color == @player_turn.color
         @selected_piece = selected
         @selected_coordinates = [y, x]
@@ -212,22 +213,30 @@ class Board
   end
 
   def move
-    if @selected_piece.nil?
-      @errors << "There is nothing here!"
-      clear_selection
+    return if @selected_piece.nil?
+    y, x = input_coordinates("Choose square to move to")
+    if valid_attack?(y, x) && opposing_piece?(y, x)
+      attack_piece(y, x)
+    elsif valid_move?(y, x)
+      move_piece(y,x)
     else
-      y, x = input_coordinates("Choose square to move to")
-      if valid_move?(y, x)
-        move_piece(y,x)
-      else
-        clear_selection
-      end
+      clear_selection
     end
+  end
+
+  def opposing_piece?(y, x)
+    return false unless @board[y][x].is_a?(Piece)
+    return true unless @selected_piece.color == @board[y][x].color
+    false
   end
 
   def clear_selection
     @selected_piece = nil
     @selected_coordinates = nil
+  end
+
+  def attack_piece(y, x)
+    move_piece(y, x)
   end
 
   def move_piece(y, x)
@@ -238,7 +247,23 @@ class Board
     clear_selection
   end
 
+  def valid_attack?(y, x)
+    @selected_piece.attacks.each do |attack|
+      valid_y = @selected_piece.location[0] + attack[0]
+      valid_x = @selected_piece.location[1] + attack[1]
+      return true if y == valid_y && x == valid_x
+    end
+    @errors << "Invalid attack for #{@selected_piece.name}"
+    return false
+  end
+
   def valid_move?(y, x)
+    if @board[y][x].is_a?(Piece)
+      if @board[y][x].color == @selected_piece.color
+        @errors << "You cannot attack your own pieces"
+        return false
+      end
+    end
     @selected_piece.moves.each do |move|
       valid_y = @selected_piece.location[0] + move[0]
       valid_x = @selected_piece.location[1] + move[1]

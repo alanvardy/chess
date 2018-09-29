@@ -1,5 +1,5 @@
 class Piece
-  attr_reader :symbol, :color, :name, :moves
+  attr_reader :symbol, :color, :name, :moves, :attacks
   attr_accessor :location
   # def icon
   #   @symbol
