@@ -225,7 +225,8 @@ class Board
   end
 
   def opposing_piece?(y, x)
-
+    return true unless @selected_piece.color == @board[y][x].color
+    false
   end
 
   def clear_selection
@@ -256,6 +257,10 @@ class Board
   end
 
   def valid_move?(y, x)
+    if @board[y][x].color == selected_piece.color
+      @errors << "You cannot attack your own pieces"
+      return false
+    end
     @selected_piece.moves.each do |move|
       valid_y = @selected_piece.location[0] + move[0]
       valid_x = @selected_piece.location[1] + move[1]
