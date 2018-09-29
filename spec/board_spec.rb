@@ -38,11 +38,20 @@ describe Board do
   end
 
   describe '#display' do
-    pending 'todo'
-    # it 'prints errors' do
-    #   expect(board.row_number).to eq(%w[1 2 3 4 5 6 7 8])
-    #   board.display
-    # end
+    it 'calls clear_screen' do
+      expect(board).to receive(:clear_screen).once
+      board.display
+    end
+
+    it 'calls horizontal_lines' do
+      expect(board).to receive(:horizontal_line).at_least(:twice)
+      board.display
+    end
+
+    it 'calls print_errors' do
+      expect(board).to receive(:print_errors).once
+      board.display
+    end
   end
 
   describe '#select_square' do
