@@ -28,11 +28,13 @@ describe Board do
   end
 
   describe '#add_pieces' do
-    pending 'todo'
-    # it 'creates 32 pieces' do
-    #   expect(board).to receive(:board).exactly(32).times
-    #   board.add_pieces
-    # end
+    it 'creates pieces' do
+      board.add_pieces
+      expect(board.board[0][0].is_a?(Piece)).to be(true)
+    end
+    it 'leaves empty spaces in the middle' do
+      expect(board.board[2][2]).to eq(" ")
+    end
   end
 
   describe '#display' do
@@ -88,7 +90,16 @@ describe Board do
   end
 
   describe '#create_players' do
-    pending 'todo'
+    before do
+      allow(board).to receive(:input).and_return("Test")
+      board.create_players
+    end
+    it 'creates white player' do
+      expect(board.white_player.is_a?(Player)).to be(true)
+    end
+    it 'creates white player' do
+      expect(board.black_player.is_a?(Player)).to be(true)
+    end
   end
 
   describe '#game' do
