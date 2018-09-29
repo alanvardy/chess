@@ -186,9 +186,11 @@ class Board
 
   def has_king?(color)
     @board.each do |row|
-      @row.each do |square|
-        return true if square.name == "king" &&
-                      square.color == color
+      row.each do |square|
+        if square.is_a?(Piece)
+          return true if square.name == "king" &&
+          square.color == color
+        end
       end
     end
     false

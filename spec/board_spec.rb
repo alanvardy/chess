@@ -121,6 +121,20 @@ describe Board do
   end
 
   describe '#has_king?' do
+    context 'when no king on board' do
+      it 'returns false' do
+        expect(board.has_king?("white")).to be(false)
+      end
+    end
+    context 'when a matching king on board' do
+      it 'returns true' do
+        board.add_pieces
+        expect(board.has_king?("white")).to be(true)
+      end
+    end
+  end
+
+  describe '#declare_winner' do
     pending 'todo'
   end
 
