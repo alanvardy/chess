@@ -136,7 +136,12 @@ describe Board do
   end
 
   describe '#declare_winner' do
-    pending 'todo'
+    it 'calls has_king? twice' do
+      board.instance_variable_set(:@white_player, Player.new("Test", "Purple"))
+      board.instance_variable_set(:@black_player, Player.new("Test", "Purple"))
+      expect(board).to receive(:has_king?).twice
+      board.declare_winner
+    end
   end
 
   describe '#change_player' do
