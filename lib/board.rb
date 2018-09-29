@@ -197,7 +197,8 @@ class Board
   end
 
   def declare_winner
-    puts "PUT SOMETHING HERE"
+    puts "#{@white_player.name} has won the game!" unless has_king?("black")
+    puts "#{@black_player.name} has won the game!" unless has_king?("white")
   end
 
   def change_player
