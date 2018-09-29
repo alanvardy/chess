@@ -134,10 +134,6 @@ describe Board do
     end
   end
 
-  describe '#declare_winner' do
-    pending 'todo'
-  end
-
   describe '#change_player' do
     context 'when white players turn' do
       it 'sets turn to black players' do
