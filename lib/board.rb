@@ -259,7 +259,7 @@ class Board
 
   def valid_move?(y, x)
     if @board[y][x].is_a?(Piece)
-      if @board[y][x].color == selected_piece.color
+      if @board[y][x].color == @selected_piece.color
         @errors << "You cannot attack your own pieces"
         return false
       end

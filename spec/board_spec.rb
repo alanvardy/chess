@@ -297,7 +297,24 @@ describe Board do
   end
 
   describe '#valid_attack?' do
-    pending 'todo'
+    before do
+      board.add_pieces
+      board.instance_variable_set(:@selected_piece, board.board[0][0])
+    end
+    context 'if in list of attacks' do
+      it 'returns true' do
+        expect(board.valid_attack?(7, 0)).to be(true)
+      end
+    end
+    context 'if not in list of attacks' do
+      it 'returns false' do
+        expect(board.valid_attack?(7, 1)).to be(false)
+      end
+      it 'adds an error' do
+        board.valid_attack?(7, 1)
+        expect(board.errors.length).to eq(1)
+      end
+    end
   end
 
   describe '#valid_move?' do
