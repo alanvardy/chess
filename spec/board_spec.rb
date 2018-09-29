@@ -100,6 +100,7 @@ describe Board do
         allow(board).to receive(:clear_screen)
         allow(board).to receive(:move)
         allow(board).to receive(:change_player)
+        allow(board).to receive(:declare_winner)
         board.game
       end
     end
@@ -134,6 +135,10 @@ describe Board do
     end
   end
 
+  describe '#declare_winner' do
+    pending 'todo'
+  end
+
   describe '#change_player' do
     context 'when white players turn' do
       it 'sets turn to black players' do
@@ -162,9 +167,6 @@ describe Board do
         board.instance_variable_set(:@selected_piece, nil)
         board.move
       end
-      it 'creates an error' do
-        expect(board.errors.length).to eq(1)
-      end
 
       it 'doesn\'t call input coordinates' do
         expect(board).to_not receive(:input_coordinates)
@@ -175,6 +177,9 @@ describe Board do
       it 'calls input_coordinates' do
         expect(board).to receive(:input_coordinates)
         board.instance_variable_set(:@selected_piece, Rook.new("black", [0,0]))
+        allow(board).to receive(:valid_attack?).and_return(false)
+        allow(board).to receive(:opposing_piece?).and_return(false)
+        allow(board).to receive(:valid_move?).and_return(false)
         board.move
       end
 
@@ -199,6 +204,10 @@ describe Board do
     end
   end
 
+  describe '#opposing_piece?' do
+    pending 'todo'
+  end
+
   describe '#clear_selection' do
     before do
       board.instance_variable_set(:@selected_piece, "test")
@@ -212,6 +221,10 @@ describe Board do
       expect(board.selected_coordinates).to be_nil
     end
 
+  end
+
+  describe '#attack_piece' do
+    pending 'todo'
   end
 
   describe '#move_piece' do
@@ -238,6 +251,10 @@ describe Board do
       expect(board).to receive(:clear_selection)
       board.move_piece(1, 2)
     end
+  end
+
+  describe '#valid_attack?' do
+    pending 'todo'
   end
 
   describe '#valid_move?' do
