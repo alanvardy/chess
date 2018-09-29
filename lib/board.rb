@@ -4,9 +4,10 @@ require_relative 'players'
 class Board
   attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
                 :white_player, :black_player
-  attr_reader :errors
+  attr_reader :errors, :eliminated_pieces
   def initialize
     @errors = []
+    @eliminated_pieces = []
     @turn_complete = true
     clear_selection
     @board = [[" "," "," "," "," "," "," "," "],
@@ -84,6 +85,8 @@ class Board
       print letter
       print "   "
     end
+    puts " "
+    @eliminated_pieces.each {|piece| print " " + piece.symbol}
     puts "\n\n"
     print_errors
   end
@@ -236,6 +239,7 @@ class Board
   end
 
   def attack_piece(y, x)
+    @eliminated_pieces << @board[y][x]
     move_piece(y, x)
   end
 
@@ -248,6 +252,12 @@ class Board
   end
 
   def valid_attack?(y, x)
+    if @board[y][x].is_a?(Piece)
+      if @board[y][x].color == @selected_piece.color
+        @errors << "You cannot attack your own pieces"
+        return false
+      end
+    end
     @selected_piece.attacks.each do |attack|
       valid_y = @selected_piece.location[0] + attack[0]
       valid_x = @selected_piece.location[1] + attack[1]
@@ -258,11 +268,9 @@ class Board
   end
 
   def valid_move?(y, x)
-    if @board[y][x].is_a?(Piece)
-      if @board[y][x].color == @selected_piece.color
-        @errors << "You cannot attack your own pieces"
-        return false
-      end
+    unless @board[y][x] == " "
+      @errors << "Invalid move for #{@selected_piece.name}"
+      return false
     end
     @selected_piece.moves.each do |move|
       valid_y = @selected_piece.location[0] + move[0]
