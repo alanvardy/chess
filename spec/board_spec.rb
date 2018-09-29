@@ -331,5 +331,18 @@ describe Board do
         expect(board.valid_move?(2, 1)).to be(false)
       end
     end
+    context 'when destination selected is the same color piece' do
+      before do
+        board.add_pieces
+        board.instance_variable_set(:@selected_piece, board.board[0][0])
+      end
+      it 'returns false' do
+        expect(board.valid_move?(0, 1)).to be(false)
+      end
+      it 'adds an error' do
+        board.valid_move?(0, 1)
+        expect(board.errors.length).to eq(1)
+      end
+    end
   end
 end
