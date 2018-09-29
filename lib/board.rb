@@ -215,16 +215,26 @@ class Board
   def move
     return if @selected_piece.nil?
     y, x = input_coordinates("Choose square to move to")
-    if valid_move?(y, x)
+    if valid_attack?(y, x) && opposing_piece?(y, x)
+      attack_piece(y, x)
+    elsif valid_move?(y, x)
       move_piece(y,x)
     else
       clear_selection
     end
   end
 
+  def opposing_piece?(y, x)
+
+  end
+
   def clear_selection
     @selected_piece = nil
     @selected_coordinates = nil
+  end
+
+  def attack_piece(y, x)
+    move_piece(y, x)
   end
 
   def move_piece(y, x)
@@ -233,6 +243,16 @@ class Board
     @board[selected_coordinates[0]][selected_coordinates[1]] = " "
     @turn_complete = true
     clear_selection
+  end
+
+  def valid_attack?
+    @selected_piece.attacks.each do |attack|
+      valid_y = @selected_piece.location[0] + attack[0]
+      valid_x = @selected_piece.location[1] + attack[1]
+      return true if y == valid_y && x == valid_x
+    end
+    @errors << "Invalid attack for #{@selected_piece.name}"
+    return false
   end
 
   def valid_move?(y, x)
