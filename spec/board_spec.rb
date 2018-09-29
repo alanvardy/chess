@@ -230,7 +230,25 @@ describe Board do
   end
 
   describe '#opposing_piece?' do
-    pending 'todo'
+    before do
+      board.add_pieces
+      board.instance_variable_set(:@selected_piece, board.board[0][0])
+    end
+    context 'when not a piece' do
+      it 'returns false' do
+        expect(board.opposing_piece?(2, 2)).to be(false)
+      end
+    end
+    context 'when same color as player' do
+      it 'returns false' do
+        expect(board.opposing_piece?(0, 1)).to be(false)
+      end
+    end
+    context 'when a piece of another color' do
+      it 'returns true' do
+        expect(board.opposing_piece?(7, 7)).to be(true)
+      end
+    end
   end
 
   describe '#clear_selection' do
