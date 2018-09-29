@@ -284,4 +284,40 @@ class Board
   def clear_screen
     puts "\e[H\e[2J"
   end
+
+  def in_check?(color)
+    king_location = locate_king(color)
+    all_opposing_pieces(color).each do |piece|
+      piece.attacks.each do |attack|
+        y = piece.location[0] + attack[0]
+        x = piece.location[1] + attack[1]
+        return true if "#{y}#{x}" == king_location
+      end
+    end
+    return false
+  end
+
+  def locate_king(color)
+    @board.each do |row|
+      row.each do |square|
+        unless square == " "
+          if square.name == "king" && square.color == color
+            return "#{square.location[0]}#{square.location[1]}"
+          end
+        end
+      end
+    end
+  end
+
+  def all_opposing_pieces(color)
+    pieces = []
+    @board.each do |row|
+      row.each do |square|
+        unless square == " "
+          pieces << square unless square.color == color
+        end
+      end
+    end
+    pieces
+  end
 end

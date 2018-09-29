@@ -359,4 +359,43 @@ describe Board do
       end
     end
   end
+
+  describe 'in_check?' do
+    context 'when not threatened' do
+      it 'returns false' do
+        board.add_pieces
+        expect(board.in_check?("white")).to be(false)
+      end
+    end
+
+    context 'when threatened' do
+      it 'returns true' do
+        board.add_pieces
+        board.board[0][1].location = [5, 3]
+        expect(board.in_check?("white")).to be(true)
+      end
+    end
+  end
+
+  describe 'locate_king' do
+    context 'when given white' do
+      it 'returns the location of the white king' do
+        board.add_pieces
+        expect(board.locate_king("white")).to eq("74")
+      end
+    end
+    context 'when given black' do
+      it 'returns the location of the black king' do
+        board.add_pieces
+        expect(board.locate_king("black")).to eq("04")
+      end
+    end
+  end
+
+  describe 'all_opposing_pieces' do
+    it 'returns an array of all opposing pieces' do
+      board.add_pieces
+      expect(board.all_opposing_pieces("white").length).to eq(16)
+    end
+  end
 end
