@@ -117,6 +117,7 @@ class Board
       selected = @board[y][x]
       if selected == " "
         @errors << "You selected a blank square"
+        clear_selection
       elsif selected.color == @player_turn.color
         @selected_piece = selected
         @selected_coordinates = [y, x]
@@ -212,16 +213,12 @@ class Board
   end
 
   def move
-    if @selected_piece.nil?
-      @errors << "There is nothing here!"
-      clear_selection
+    return if @selected_piece.nil?
+    y, x = input_coordinates("Choose square to move to")
+    if valid_move?(y, x)
+      move_piece(y,x)
     else
-      y, x = input_coordinates("Choose square to move to")
-      if valid_move?(y, x)
-        move_piece(y,x)
-      else
-        clear_selection
-      end
+      clear_selection
     end
   end
 
