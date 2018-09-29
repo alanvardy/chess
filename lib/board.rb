@@ -176,10 +176,29 @@ class Board
       display
       move
     end
+    declare_winner
   end
 
   def won?
+    return false if has_king?("white") && has_king?("black")
+    true
+  end
+
+  def has_king?(color)
+    @board.each do |row|
+      row.each do |square|
+        if square.is_a?(Piece)
+          return true if square.name == "king" &&
+          square.color == color
+        end
+      end
+    end
     false
+  end
+
+  def declare_winner
+    puts "#{@white_player.name} has won the game!" unless has_king?("black")
+    puts "#{@black_player.name} has won the game!" unless has_king?("white")
   end
 
   def change_player

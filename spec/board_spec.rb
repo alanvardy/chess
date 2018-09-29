@@ -105,6 +105,35 @@ describe Board do
     end
   end
 
+  describe '#won?' do
+    context 'when both players have kings' do
+      it 'returns false' do
+        allow(board).to receive(:has_king?).and_return(true)
+        expect(board.won?).to be(false)
+      end
+    end
+    context 'when one player has no king' do
+      it 'returns true' do
+        allow(board).to receive(:has_king?).and_return(false, true)
+        expect(board.won?).to be(true)
+      end
+    end
+  end
+
+  describe '#has_king?' do
+    context 'when no king on board' do
+      it 'returns false' do
+        expect(board.has_king?("white")).to be(false)
+      end
+    end
+    context 'when a matching king on board' do
+      it 'returns true' do
+        board.add_pieces
+        expect(board.has_king?("white")).to be(true)
+      end
+    end
+  end
+
   describe '#change_player' do
     context 'when white players turn' do
       it 'sets turn to black players' do
