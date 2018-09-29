@@ -105,6 +105,14 @@ describe Board do
     end
   end
 
+  describe '#won?' do
+    pending 'todo'
+  end
+
+  describe '#has_king?' do
+    pending 'todo'
+  end
+
   describe '#change_player' do
     context 'when white players turn' do
       it 'sets turn to black players' do

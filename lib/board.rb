@@ -179,6 +179,17 @@ class Board
   end
 
   def won?
+    return false if has_king?("white") && has_king?("black")
+    true
+  end
+
+  def has_king?(color)
+    @board.each do |row|
+      @row.each do |square|
+        return true if square.name == "king" &&
+                      square.color == color
+      end
+    end
     false
   end
 
