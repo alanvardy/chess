@@ -2,7 +2,6 @@ require_relative 'pieces'
 require_relative 'players'
 
 class Board
-  include Enumerable
   attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
                 :white_player, :black_player
   attr_reader :errors, :eliminated_pieces
@@ -354,7 +353,8 @@ class Board
     xdifferential = xend-xstart
     return false if ydifferential.abs < 2 && xdifferential.abs < 2
     steps = [ydifferential.abs, xdifferential.abs].max - 1
-    yincrement, xincrement = set_increment(ydifferential, xdifferential)
+    yincrement = set_increment(ydifferential)
+    xincrement = set_increment(xdifferential)
     steps.times do
       ystart += yincrement
       xstart += xincrement
@@ -363,22 +363,15 @@ class Board
     return false
   end
 
-  def set_increment(ydifferential, xdifferential)
-    if ydifferential > 0
-      yincrement = 1
-    elsif ydifferential < 0
-      yincrement = -1
+  def set_increment(differential)
+    if differential > 0
+      increment = 1
+    elsif differential < 0
+      increment = -1
     else
-      yincrement = 0
+      increment = 0
     end
-    if xdifferential > 0
-      xincrement = 1
-    elsif xdifferential < 0
-      xincrement = -1
-    else
-      xincrement = 0
-    end
-    return yincrement, xincrement
+    return increment
   end
 end
 

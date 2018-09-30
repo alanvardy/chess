@@ -418,14 +418,19 @@ describe Board do
   end
 
   describe '#set_increment' do
-    context 'when ydiff is positive and xdiff is positive' do
-      it 'returns 1 and 1' do
-        expect(board.set_increment(4, 4)).to eq([1, 1])
+    context 'when diff is positive' do
+      it 'returns 1' do
+        expect(board.set_increment(4)).to eq(1)
       end
     end
-    context 'when ydiff is 0 and xdiff is negative' do
-      it 'returns -1 and -1' do
-        expect(board.set_increment(0, -4)).to eq([0, -1])
+    context 'when diff is negative' do
+      it 'returns -1' do
+        expect(board.set_increment(-3)).to eq(-1)
+      end
+    end
+    context 'when diff is 0' do
+      it 'returns 0' do
+        expect(board.set_increment(0)).to eq(0)
       end
     end
   end
