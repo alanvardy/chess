@@ -274,10 +274,6 @@ describe Board do
     it 'clears @selected_piece' do
       expect(board.selected_piece).to be_nil
     end
-    it 'clears @selected_coordinates' do
-      expect(board.selected_coordinates).to be_nil
-    end
-
   end
 
   describe '#attack_piece' do

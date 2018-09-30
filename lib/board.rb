@@ -2,7 +2,7 @@ require_relative 'pieces'
 require_relative 'players'
 
 class Board
-  attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
+  attr_accessor :board, :selected_piece, :player_turn,
                 :white_player, :black_player
   attr_reader :errors, :eliminated_pieces
   def initialize
@@ -108,9 +108,9 @@ class Board
   end
 
   def selected_square?(y, x)
-    if @selected_coordinates.nil?
+    if @selected_piece.nil?
       false
-    elsif @selected_coordinates[0] == y && @selected_coordinates[1] == x
+    elsif @selected_piece.location[0] == y && @selected_piece.location[1] == x
       true
     else
       false
@@ -118,23 +118,17 @@ class Board
   end
 
   def select_square
-    loop do
-      print_errors
       y, x = input_coordinates("#{@player_turn.name}: Select piece")
-      next if y.nil?
-      selected = @board[y][x]
-      if selected == " "
+      if empty_square?(y, x)
         @errors << "You selected a blank square"
         clear_selection
-      elsif selected.color == @player_turn.color
-        @selected_piece = selected
-        @selected_coordinates = [y, x]
-        puts "You have selected #{selected.color} #{selected.name}"
+      elsif @board[y][x].color == @player_turn.color
+        @selected_piece = @board[y][x]
+        puts "You have selected #{@selected_piece.color} #{@selected_piece.name}"
         return
       else
         puts "You need to choose a #{@player_turn.color} piece"
       end
-    end
   end
 
   def input_coordinates(text)
@@ -258,7 +252,6 @@ class Board
 
   def clear_selection
     @selected_piece = nil
-    @selected_coordinates = nil
   end
 
   def attack_piece(y, x)
@@ -267,9 +260,11 @@ class Board
   end
 
   def move_piece(y, x)
+    oldy = @selected_piece.location[0]
+    oldx = @selected_piece.location[1]
     @board[y][x] = @selected_piece
     @board[y][x].location = [y, x]
-    @board[selected_coordinates[0]][selected_coordinates[1]] = " "
+    @board[oldy][oldx] = " "
     @turn_complete = true
     clear_selection
   end
