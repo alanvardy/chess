@@ -347,18 +347,20 @@ class Board
 
   def blocked?(yend, xend)
     return false if @selected_piece.name == "knight"
+
     ystart = @selected_piece.location[0]
     xstart = @selected_piece.location[1]
     ydifferential = yend-ystart
     xdifferential = xend-xstart
-    return false if ydifferential.abs < 2 && xdifferential.abs < 2
-    steps = [ydifferential.abs, xdifferential.abs].max - 1
     yincrement = set_increment(ydifferential)
     xincrement = set_increment(xdifferential)
+    steps = [ydifferential.abs, xdifferential.abs].max - 1
+
+    return false if ydifferential.abs < 2 && xdifferential.abs < 2
     steps.times do
       ystart += yincrement
       xstart += xincrement
-      return true unless @board[ystart][xstart] == " "
+      return true unless empty_square?(ystart, xstart)
     end
     return false
   end
@@ -371,7 +373,11 @@ class Board
     else
       increment = 0
     end
-    return increment
+    increment
+  end
+
+  def empty_square?(y, x)
+    @board[y][x] == " "
   end
 end
 
