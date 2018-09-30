@@ -189,15 +189,6 @@ class Board
   end
 
   def has_king?(color)
-    # @board.each do |row|
-    #   row.each do |square|
-    #     if square.is_a?(Piece)
-    #       return true if square.name == "king" &&
-    #       square.color == color
-    #     end
-    #   end
-    # end
-    # false
     every_square do |square|
       if square.is_a?(Piece)
         return true if square.name == "king" &&
@@ -329,16 +320,6 @@ class Board
   end
 
   def locate_king(color)
-    # @board.each do |row|
-    #   row.each do |square|
-    #     unless square == " "
-    #       if square.name == "king" && square.color == color
-    #         return "#{square.location[0]}#{square.location[1]}"
-    #       end
-    #     end
-    #   end
-    # end
-    # return nil
     every_square do |square|
       unless square == " "
         if square.name == "king" && square.color == color
@@ -350,15 +331,6 @@ class Board
   end
 
   def all_opposing_pieces(color)
-    # pieces = []
-    # @board.each do |row|
-    #   row.each do |square|
-    #     unless square == " "
-    #       pieces << square unless square.color == color
-    #     end
-    #   end
-    # end
-    # pieces
     pieces = []
     every_square do |square|
       unless square == " "
