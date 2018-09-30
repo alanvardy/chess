@@ -274,10 +274,6 @@ describe Board do
     it 'clears @selected_piece' do
       expect(board.selected_piece).to be_nil
     end
-    it 'clears @selected_coordinates' do
-      expect(board.selected_coordinates).to be_nil
-    end
-
   end
 
   describe '#attack_piece' do
@@ -286,8 +282,8 @@ describe Board do
 
   describe '#move_piece' do
     before do
+      board.instance_variable_set(:@player_turn, Player.new("Test", "white"))
       board.instance_variable_set(:@selected_piece, Pawn.new("White", [4, 5]))
-      board.instance_variable_set(:@selected_coordinates, [4, 5])
       board.move_piece(1, 2)
     end
     it 'moves the piece to the new location' do
@@ -325,10 +321,6 @@ describe Board do
       it 'returns false' do
         expect(board.valid_attack?(7, 1)).to be(false)
       end
-      it 'adds an error' do
-        board.valid_attack?(7, 1)
-        expect(board.errors.length).to eq(1)
-      end
     end
   end
 
@@ -353,10 +345,6 @@ describe Board do
       end
       it 'returns false' do
         expect(board.valid_move?(0, 1)).to be(false)
-      end
-      it 'adds an error' do
-        board.valid_move?(0, 1)
-        expect(board.errors.length).to eq(1)
       end
     end
   end
@@ -418,14 +406,19 @@ describe Board do
   end
 
   describe '#set_increment' do
-    context 'when ydiff is positive and xdiff is positive' do
-      it 'returns 1 and 1' do
-        expect(board.set_increment(4, 4)).to eq([1, 1])
+    context 'when diff is positive' do
+      it 'returns 1' do
+        expect(board.set_increment(4)).to eq(1)
       end
     end
-    context 'when ydiff is 0 and xdiff is negative' do
-      it 'returns -1 and -1' do
-        expect(board.set_increment(0, -4)).to eq([0, -1])
+    context 'when diff is negative' do
+      it 'returns -1' do
+        expect(board.set_increment(-3)).to eq(-1)
+      end
+    end
+    context 'when diff is 0' do
+      it 'returns 0' do
+        expect(board.set_increment(0)).to eq(0)
       end
     end
   end

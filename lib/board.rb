@@ -2,13 +2,13 @@ require_relative 'pieces'
 require_relative 'players'
 
 class Board
-  include Enumerable
-  attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
+  attr_accessor :board, :selected_piece, :player_turn,
                 :white_player, :black_player
-  attr_reader :errors, :eliminated_pieces
+  attr_reader :errors, :eliminated_pieces, :last_eliminated
   def initialize
     @errors = []
     @eliminated_pieces = []
+    @last_eliminated = nil
     @turn_complete = true
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -58,8 +58,9 @@ class Board
   def display
     clear_screen
     row_number = ["1", "2", "3", "4", "5", "6", "7", "8"]
-    column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
     puts "\n"
+    puts column_letters
     horizontal_line
     yref = 0
     @board.each do |row|
@@ -76,16 +77,11 @@ class Board
         print "|"
         xref += 1
       end
+      puts " #{row_number[yref]}"
       yref += 1
-      puts ""
       horizontal_line
     end
-    print "     "
-    column_letter.each do |letter|
-      print letter
-      print "   "
-    end
-    puts " "
+    puts column_letters
     @eliminated_pieces.each {|piece| print " " + piece.symbol}
     puts "\n\n"
     print_errors
@@ -102,10 +98,20 @@ class Board
     end
   end
 
+  def column_letters
+    column_letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    string = "     "
+    column_letters.each do |letter|
+      string += letter
+      string += "   "
+    end
+    string += " "
+  end
+
   def selected_square?(y, x)
-    if @selected_coordinates.nil?
+    if @selected_piece.nil?
       false
-    elsif @selected_coordinates[0] == y && @selected_coordinates[1] == x
+    elsif @selected_piece.location[0] == y && @selected_piece.location[1] == x
       true
     else
       false
@@ -113,23 +119,17 @@ class Board
   end
 
   def select_square
-    loop do
-      print_errors
       y, x = input_coordinates("#{@player_turn.name}: Select piece")
-      next if y.nil?
-      selected = @board[y][x]
-      if selected == " "
+      if empty_square?(y, x)
         @errors << "You selected a blank square"
         clear_selection
-      elsif selected.color == @player_turn.color
-        @selected_piece = selected
-        @selected_coordinates = [y, x]
-        puts "You have selected #{selected.color} #{selected.name}"
+      elsif @board[y][x].color == @player_turn.color
+        @selected_piece = @board[y][x]
+        puts "You have selected #{@selected_piece.color} #{@selected_piece.name}"
         return
       else
-        puts "You need to choose a #{@player_turn.color} piece"
+        @errors << "You need to choose a #{@player_turn.color} piece"
       end
-    end
   end
 
   def input_coordinates(text)
@@ -180,6 +180,7 @@ class Board
       select_square
       display
       move
+      check_for_check
     end
     declare_winner
   end
@@ -189,13 +190,17 @@ class Board
     true
   end
 
+  def check_for_check
+    if in_check?("white") || in_check?("black")
+      @errors << "CHECK!"
+    end
+  end
+
   def has_king?(color)
-    @board.each do |row|
-      row.each do |square|
-        if square.is_a?(Piece)
-          return true if square.name == "king" &&
-          square.color == color
-        end
+    every_square do |square|
+      if square.is_a?(Piece)
+        return true if square.name == "king" &&
+        square.color == color
       end
     end
     false
@@ -234,6 +239,7 @@ class Board
       @selected_piece.moved += 1
       move_piece(y, x)
     else
+      @errors << "Invalid move"
       clear_selection
     end
   end
@@ -246,31 +252,45 @@ class Board
 
   def clear_selection
     @selected_piece = nil
-    @selected_coordinates = nil
+    @last_eliminated = nil
   end
 
   def attack_piece(y, x)
     @eliminated_pieces << @board[y][x]
+    @last_eliminated = @board[y][x]
     move_piece(y, x)
   end
 
-  def move_piece(y, x)
-    @board[y][x] = @selected_piece
-    @board[y][x].location = [y, x]
-    @board[selected_coordinates[0]][selected_coordinates[1]] = " "
+  def move_piece(newy, newx)
+    oldy = @selected_piece.location[0]
+    oldx = @selected_piece.location[1]
+    @board[newy][newx] = @selected_piece
+    @board[newy][newx].location = [newy, newx]
+    @board[oldy][oldx] = " "
     @turn_complete = true
+    undo_move(oldy, oldx, newx, newy) if in_check?(player_turn.color)
     clear_selection
+  end
+
+  def undo_move(oldy, oldx, newx, newy)
+    @board[oldy][oldx] = @selected_piece
+    @board[oldy][oldx].location = [oldy, oldx]
+    if @last_eliminated.is_a?(Piece)
+      @board[newy][newx] = @last_eliminated
+    else
+      @board[newy][newx] = " "
+    end
+    @turn_complete = false
+    @errors << "Cannot leave king in check"
   end
 
   def valid_attack?(y, x)
     if @board[y][x].is_a?(Piece)
       if @board[y][x].color == @selected_piece.color
-        @errors << "You cannot attack your own pieces"
         return false
       end
     end
     if blocked?(y, x)
-      @errors << "Your move is blocked by another piece"
       return false
     end
     @selected_piece.attacks.each do |attack|
@@ -278,17 +298,14 @@ class Board
       valid_x = @selected_piece.location[1] + attack[1]
       return true if y == valid_y && x == valid_x
     end
-    @errors << "Invalid attack for #{@selected_piece.name}"
     return false
   end
 
   def valid_move?(y, x)
     unless @board[y][x] == " "
-      @errors << "Invalid move for #{@selected_piece.name}"
       return false
     end
     if blocked?(y, x)
-      @errors << "Your move is blocked by another piece"
       return false
     end
     if @selected_piece.moved == 0
@@ -301,7 +318,6 @@ class Board
       valid_x = @selected_piece.location[1] + move[1]
       return true if y == valid_y && x == valid_x
     end
-    @errors << "Invalid move for #{@selected_piece.name}"
     return false
   end
 
@@ -322,12 +338,10 @@ class Board
   end
 
   def locate_king(color)
-    @board.each do |row|
-      row.each do |square|
-        unless square == " "
-          if square.name == "king" && square.color == color
-            return "#{square.location[0]}#{square.location[1]}"
-          end
+    every_square do |square|
+      unless square == " "
+        if square.name == "king" && square.color == color
+          return "#{square.location[0]}#{square.location[1]}"
         end
       end
     end
@@ -336,11 +350,9 @@ class Board
 
   def all_opposing_pieces(color)
     pieces = []
-    @board.each do |row|
-      row.each do |square|
-        unless square == " "
-          pieces << square unless square.color == color
-        end
+    every_square do |square|
+      unless square == " "
+        pieces << square unless square.color == color
       end
     end
     pieces
@@ -348,37 +360,44 @@ class Board
 
   def blocked?(yend, xend)
     return false if @selected_piece.name == "knight"
+
     ystart = @selected_piece.location[0]
     xstart = @selected_piece.location[1]
     ydifferential = yend-ystart
     xdifferential = xend-xstart
-    return false if ydifferential.abs < 2 && xdifferential.abs < 2
+    yincrement = set_increment(ydifferential)
+    xincrement = set_increment(xdifferential)
     steps = [ydifferential.abs, xdifferential.abs].max - 1
-    yincrement, xincrement = set_increment(ydifferential, xdifferential)
+
+    return false if ydifferential.abs < 2 && xdifferential.abs < 2
     steps.times do
       ystart += yincrement
       xstart += xincrement
-      return true unless @board[ystart][xstart] == " "
+      return true unless empty_square?(ystart, xstart)
     end
     return false
   end
 
-  def set_increment(ydifferential, xdifferential)
-    if ydifferential > 0
-      yincrement = 1
-    elsif ydifferential < 0
-      yincrement = -1
+  def set_increment(differential)
+    if differential > 0
+      increment = 1
+    elsif differential < 0
+      increment = -1
     else
-      yincrement = 0
+      increment = 0
     end
-    if xdifferential > 0
-      xincrement = 1
-    elsif xdifferential < 0
-      xincrement = -1
-    else
-      xincrement = 0
+    increment
+  end
+
+  def empty_square?(y, x)
+    @board[y][x] == " "
+  end
+
+  def every_square
+    @board.each do |row|
+      row.each do |square|
+        yield(square)
+      end
     end
-    return yincrement, xincrement
   end
 end
-
