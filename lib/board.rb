@@ -2,6 +2,7 @@ require_relative 'pieces'
 require_relative 'players'
 
 class Board
+  include Enumerable
   attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
                 :white_player, :black_player
   attr_reader :errors, :eliminated_pieces
@@ -231,7 +232,7 @@ class Board
       attack_piece(y, x)
     elsif valid_move?(y, x)
       @selected_piece.moved += 1
-      move_piece(y,x)
+      move_piece(y, x)
     else
       clear_selection
     end
@@ -268,6 +269,10 @@ class Board
         return false
       end
     end
+    if blocked?(y, x)
+      @errors << "Your move is blocked by another piece"
+      return false
+    end
     @selected_piece.attacks.each do |attack|
       valid_y = @selected_piece.location[0] + attack[0]
       valid_x = @selected_piece.location[1] + attack[1]
@@ -282,12 +287,15 @@ class Board
       @errors << "Invalid move for #{@selected_piece.name}"
       return false
     end
+    if blocked?(y, x)
+      @errors << "Your move is blocked by another piece"
+      return false
+    end
     if @selected_piece.moved == 0
       moves = @selected_piece.first_move
     else
       moves = @selected_piece.moves
     end
-
     moves.each do |move|
       valid_y = @selected_piece.location[0] + move[0]
       valid_x = @selected_piece.location[1] + move[1]
@@ -337,4 +345,40 @@ class Board
     end
     pieces
   end
+
+  def blocked?(yend, xend)
+    return false if @selected_piece.name == "knight"
+    ystart = @selected_piece.location[0]
+    xstart = @selected_piece.location[1]
+    ydifferential = yend-ystart
+    xdifferential = xend-xstart
+    return false if ydifferential.abs < 2 && xdifferential.abs < 2
+    steps = [ydifferential.abs, xdifferential.abs].max - 1
+    yincrement, xincrement = set_increment(ydifferential, xdifferential)
+    steps.times do
+      ystart += yincrement
+      xstart += xincrement
+      return true unless @board[ystart][xstart] == " "
+    end
+    return false
+  end
+
+  def set_increment(ydifferential, xdifferential)
+    if ydifferential > 0
+      yincrement = 1
+    elsif ydifferential < 0
+      yincrement = -1
+    else
+      yincrement = 0
+    end
+    if xdifferential > 0
+      xincrement = 1
+    elsif xdifferential < 0
+      xincrement = -1
+    else
+      xincrement = 0
+    end
+    return yincrement, xincrement
+  end
 end
+
