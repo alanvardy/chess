@@ -57,8 +57,9 @@ class Board
   def display
     clear_screen
     row_number = ["1", "2", "3", "4", "5", "6", "7", "8"]
-    column_letter = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
     puts "\n"
+    puts column_letters
     horizontal_line
     yref = 0
     @board.each do |row|
@@ -75,16 +76,11 @@ class Board
         print "|"
         xref += 1
       end
+      puts " #{row_number[yref]}"
       yref += 1
-      puts ""
       horizontal_line
     end
-    print "     "
-    column_letter.each do |letter|
-      print letter
-      print "   "
-    end
-    puts " "
+    puts column_letters
     @eliminated_pieces.each {|piece| print " " + piece.symbol}
     puts "\n\n"
     print_errors
@@ -99,6 +95,16 @@ class Board
     while @errors.length > 0
       puts @errors.pop
     end
+  end
+
+  def column_letters
+    column_letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    string = "     "
+    column_letters.each do |letter|
+      string += letter
+      string += "   "
+    end
+    string += " "
   end
 
   def selected_square?(y, x)
@@ -189,12 +195,19 @@ class Board
   end
 
   def has_king?(color)
-    @board.each do |row|
-      row.each do |square|
-        if square.is_a?(Piece)
-          return true if square.name == "king" &&
-          square.color == color
-        end
+    # @board.each do |row|
+    #   row.each do |square|
+    #     if square.is_a?(Piece)
+    #       return true if square.name == "king" &&
+    #       square.color == color
+    #     end
+    #   end
+    # end
+    # false
+    every_square do |square|
+      if square.is_a?(Piece)
+        return true if square.name == "king" &&
+        square.color == color
       end
     end
     false
@@ -321,12 +334,20 @@ class Board
   end
 
   def locate_king(color)
-    @board.each do |row|
-      row.each do |square|
-        unless square == " "
-          if square.name == "king" && square.color == color
-            return "#{square.location[0]}#{square.location[1]}"
-          end
+    # @board.each do |row|
+    #   row.each do |square|
+    #     unless square == " "
+    #       if square.name == "king" && square.color == color
+    #         return "#{square.location[0]}#{square.location[1]}"
+    #       end
+    #     end
+    #   end
+    # end
+    # return nil
+    every_square do |square|
+      unless square == " "
+        if square.name == "king" && square.color == color
+          return "#{square.location[0]}#{square.location[1]}"
         end
       end
     end
@@ -334,12 +355,19 @@ class Board
   end
 
   def all_opposing_pieces(color)
+    # pieces = []
+    # @board.each do |row|
+    #   row.each do |square|
+    #     unless square == " "
+    #       pieces << square unless square.color == color
+    #     end
+    #   end
+    # end
+    # pieces
     pieces = []
-    @board.each do |row|
-      row.each do |square|
-        unless square == " "
-          pieces << square unless square.color == color
-        end
+    every_square do |square|
+      unless square == " "
+        pieces << square unless square.color == color
       end
     end
     pieces
@@ -378,6 +406,14 @@ class Board
 
   def empty_square?(y, x)
     @board[y][x] == " "
+  end
+
+  def every_square
+    @board.each do |row|
+      row.each do |square|
+        yield(square)
+      end
+    end
   end
 end
 
