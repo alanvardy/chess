@@ -224,6 +224,8 @@ class Board
       in_check?(@selected_piece.color, "#{y}#{x}")
       @errors << "Cannot put king into check"
       clear_selection
+    elsif
+
     elsif valid_attack?(y, x) && opposing_piece?(y, x)
       @selected_piece.moved += 1
       attack_piece(y, x)
@@ -231,6 +233,7 @@ class Board
       @selected_piece.moved += 1
       move_piece(y, x)
     else
+      @errors << "Invalid move"
       clear_selection
     end
   end
@@ -263,12 +266,10 @@ class Board
   def valid_attack?(y, x)
     if @board[y][x].is_a?(Piece)
       if @board[y][x].color == @selected_piece.color
-        @errors << "You cannot attack your own pieces"
         return false
       end
     end
     if blocked?(y, x)
-      @errors << "Your move is blocked by another piece"
       return false
     end
     @selected_piece.attacks.each do |attack|
@@ -276,17 +277,14 @@ class Board
       valid_x = @selected_piece.location[1] + attack[1]
       return true if y == valid_y && x == valid_x
     end
-    @errors << "Invalid attack for #{@selected_piece.name}"
     return false
   end
 
   def valid_move?(y, x)
     unless @board[y][x] == " "
-      @errors << "Invalid move for #{@selected_piece.name}"
       return false
     end
     if blocked?(y, x)
-      @errors << "Your move is blocked by another piece"
       return false
     end
     if @selected_piece.moved == 0
@@ -299,7 +297,6 @@ class Board
       valid_x = @selected_piece.location[1] + move[1]
       return true if y == valid_y && x == valid_x
     end
-    @errors << "Invalid move for #{@selected_piece.name}"
     return false
   end
 
