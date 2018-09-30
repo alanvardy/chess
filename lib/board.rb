@@ -345,12 +345,10 @@ class Board
     pieces
   end
 
-  def blocked?(y, x)
+  def blocked?(yend, xend)
     return false if selected_piece.name = "knight"
     ystart = selected_coordinates[0]
     xstart = selected_coordinates[1]
-    yend = y
-    xend = x
     ydifferential = yend-ystart
     xdifferential = xend-xstart
     return false if ydifferential.abs < 2 && xdifferential.abs < 2
