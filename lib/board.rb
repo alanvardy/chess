@@ -9,7 +9,6 @@ class Board
     @errors = []
     @eliminated_pieces = []
     @turn_complete = true
-    clear_selection
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -155,6 +154,7 @@ class Board
   end
 
   def start
+    clear_selection
     add_pieces
     create_players
     game
@@ -218,8 +218,16 @@ class Board
   def move
     return if @selected_piece.nil?
     y, x = input_coordinates("Choose square to move to")
-    if valid_attack?(y, x) && opposing_piece?(y, x)
-      @selected.moved += 1
+    if y.nil?
+      clear_selection
+      return
+    end
+    if @selected_piece.name == "king" &&
+      in_check?(@selected_piece.color, "#{y}#{x}")
+      @errors << "Cannot put king into check"
+      clear_selection
+    elsif valid_attack?(y, x) && opposing_piece?(y, x)
+      @selected_piece.moved += 1
       attack_piece(y, x)
     elsif valid_move?(y, x)
       @selected_piece.moved += 1
@@ -293,8 +301,8 @@ class Board
     puts "\e[H\e[2J"
   end
 
-  def in_check?(color)
-    king_location = locate_king(color)
+  def in_check?(color, location = nil)
+    king_location = location || locate_king(color)
     all_opposing_pieces(color).each do |piece|
       piece.attacks.each do |attack|
         y = piece.location[0] + attack[0]
@@ -315,6 +323,7 @@ class Board
         end
       end
     end
+    return nil
   end
 
   def all_opposing_pieces(color)
