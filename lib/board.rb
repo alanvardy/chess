@@ -347,11 +347,34 @@ class Board
 
   def blocked?(y, x)
     return false if selected_piece.name = "knight"
-    ysta = selected_coordinates[0]
-    xsta = selected_coordinates[1]
+    ystart = selected_coordinates[0]
+    xstart = selected_coordinates[1]
     yend = y
     xend = x
-    return false if (ysta-yend).abs < 2 && (xsta-xend).abs < 2
-    
+    ydifferential = yend-ystart
+    xdifferential = xend-xstart
+    return false if ydifferential.abs < 2 && xdifferential.abs < 2
+    steps = [ydifferential, xdifferential].max
+    yincrement, xincrement = set_increment(ydifferential, xdifferential)
+
+  end
+
+  def set_increment(ydifferential, xdifferential)
+    if ydifferential > 0
+      yincrement = 1
+    elsif ydifferential < 0
+      yincrement = -1
+    else
+      yincrement = 0
+    end
+    if xdifferential > 0
+      xincrement = 1
+    elsif xdifferential < 0
+      xincrement = -1
+    else
+      xincrement = 0
+    end
+    return yincrement, xincrement
   end
 end
+
