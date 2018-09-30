@@ -219,8 +219,10 @@ class Board
     return if @selected_piece.nil?
     y, x = input_coordinates("Choose square to move to")
     if valid_attack?(y, x) && opposing_piece?(y, x)
+      @selected.moved += 1
       attack_piece(y, x)
     elsif valid_move?(y, x)
+      @selected_piece.moved += 1
       move_piece(y,x)
     else
       clear_selection
@@ -272,7 +274,13 @@ class Board
       @errors << "Invalid move for #{@selected_piece.name}"
       return false
     end
-    @selected_piece.moves.each do |move|
+    if @selected_piece.moved == 0
+      moves = @selected_piece.first_move
+    else
+      moves = @selected_piece.moves
+    end
+
+    moves.each do |move|
       valid_y = @selected_piece.location[0] + move[0]
       valid_x = @selected_piece.location[1] + move[1]
       return true if y == valid_y && x == valid_x
