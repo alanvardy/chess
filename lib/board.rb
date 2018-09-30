@@ -4,10 +4,11 @@ require_relative 'players'
 class Board
   attr_accessor :board, :selected_piece, :player_turn,
                 :white_player, :black_player
-  attr_reader :errors, :eliminated_pieces
+  attr_reader :errors, :eliminated_pieces, :last_eliminated
   def initialize
     @errors = []
     @eliminated_pieces = []
+    @last_eliminated = nil
     @turn_complete = true
     @board = [[" "," "," "," "," "," "," "," "],
               [" "," "," "," "," "," "," "," "],
@@ -127,7 +128,7 @@ class Board
         puts "You have selected #{@selected_piece.color} #{@selected_piece.name}"
         return
       else
-        puts "You need to choose a #{@player_turn.color} piece"
+        @errors << "You need to choose a #{@player_turn.color} piece"
       end
   end
 
@@ -179,6 +180,7 @@ class Board
       select_square
       display
       move
+      check_for_check
     end
     declare_winner
   end
@@ -186,6 +188,12 @@ class Board
   def won?
     return false if has_king?("white") && has_king?("black")
     true
+  end
+
+  def check_for_check
+    if in_check?("white") || in_check?("black")
+      @errors << "CHECK!"
+    end
   end
 
   def has_king?(color)
@@ -224,8 +232,6 @@ class Board
       in_check?(@selected_piece.color, "#{y}#{x}")
       @errors << "Cannot put king into check"
       clear_selection
-    elsif
-
     elsif valid_attack?(y, x) && opposing_piece?(y, x)
       @selected_piece.moved += 1
       attack_piece(y, x)
@@ -246,21 +252,36 @@ class Board
 
   def clear_selection
     @selected_piece = nil
+    @last_eliminated = nil
   end
 
   def attack_piece(y, x)
     @eliminated_pieces << @board[y][x]
+    @last_eliminated = @board[y][x]
     move_piece(y, x)
   end
 
-  def move_piece(y, x)
+  def move_piece(newy, newx)
     oldy = @selected_piece.location[0]
     oldx = @selected_piece.location[1]
-    @board[y][x] = @selected_piece
-    @board[y][x].location = [y, x]
+    @board[newy][newx] = @selected_piece
+    @board[newy][newx].location = [newy, newx]
     @board[oldy][oldx] = " "
     @turn_complete = true
+    undo_move(oldy, oldx, newx, newy) if in_check?(player_turn.color)
     clear_selection
+  end
+
+  def undo_move(oldy, oldx, newx, newy)
+    @board[oldy][oldx] = @selected_piece
+    @board[oldy][oldx].location = [oldy, oldx]
+    if @last_eliminated.is_a?(Piece)
+      @board[newy][newx] = @last_eliminated
+    else
+      @board[newy][newx] = " "
+    end
+    @turn_complete = false
+    @errors << "Cannot leave king in check"
   end
 
   def valid_attack?(y, x)
@@ -380,4 +401,3 @@ class Board
     end
   end
 end
-
