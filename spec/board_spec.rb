@@ -314,6 +314,7 @@ describe Board do
     before do
       board.add_pieces
       board.instance_variable_set(:@selected_piece, board.board[0][0])
+      allow(board).to receive(:blocked?).and_return(false)
     end
     context 'if in list of attacks' do
       it 'returns true' do
@@ -360,7 +361,7 @@ describe Board do
     end
   end
 
-  describe 'in_check?' do
+  describe '#in_check?' do
     context 'when not threatened' do
       it 'returns false' do
         board.add_pieces
@@ -377,7 +378,7 @@ describe Board do
     end
   end
 
-  describe 'locate_king' do
+  describe '#locate_king' do
     context 'when given white' do
       it 'returns the location of the white king' do
         board.add_pieces
@@ -392,10 +393,40 @@ describe Board do
     end
   end
 
-  describe 'all_opposing_pieces' do
+  describe '#all_opposing_pieces' do
     it 'returns an array of all opposing pieces' do
       board.add_pieces
       expect(board.all_opposing_pieces("white").length).to eq(16)
+    end
+  end
+
+  describe '#blocked?' do
+    describe 'when there are pieces in the way' do
+      it 'returns true' do
+        board.add_pieces
+        board.instance_variable_set(:@selected_piece, board.board[7][0])
+        expect(board.blocked?(5, 0)).to be(true)
+      end
+    end
+    describe 'when there are no pieces in the way' do
+      it 'returns false' do
+        board.add_pieces
+        board.instance_variable_set(:@selected_piece, board.board[6][0])
+        expect(board.blocked?(4, 0)).to be(false)
+      end
+    end
+  end
+
+  describe '#set_increment' do
+    context 'when ydiff is positive and xdiff is positive' do
+      it 'returns 1 and 1' do
+        expect(board.set_increment(4, 4)).to eq([1, 1])
+      end
+    end
+    context 'when ydiff is 0 and xdiff is negative' do
+      it 'returns -1 and -1' do
+        expect(board.set_increment(0, -4)).to eq([0, -1])
+      end
     end
   end
 end

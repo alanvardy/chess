@@ -2,6 +2,7 @@ require_relative 'pieces'
 require_relative 'players'
 
 class Board
+  include Enumerable
   attr_accessor :board, :selected_piece, :selected_coordinates, :player_turn,
                 :white_player, :black_player
   attr_reader :errors, :eliminated_pieces
@@ -267,18 +268,18 @@ class Board
         @errors << "You cannot attack your own pieces"
         return false
       end
-    elsif blocked?(y, x)
+    end
+    if blocked?(y, x)
       @errors << "Your move is blocked by another piece"
       return false
-    else
-      @selected_piece.attacks.each do |attack|
-        valid_y = @selected_piece.location[0] + attack[0]
-        valid_x = @selected_piece.location[1] + attack[1]
-        return true if y == valid_y && x == valid_x
-      end
-      @errors << "Invalid attack for #{@selected_piece.name}"
-      return false
     end
+    @selected_piece.attacks.each do |attack|
+      valid_y = @selected_piece.location[0] + attack[0]
+      valid_x = @selected_piece.location[1] + attack[1]
+      return true if y == valid_y && x == valid_x
+    end
+    @errors << "Invalid attack for #{@selected_piece.name}"
+    return false
   end
 
   def valid_move?(y, x)
@@ -346,15 +347,20 @@ class Board
   end
 
   def blocked?(yend, xend)
-    return false if selected_piece.name = "knight"
-    ystart = selected_coordinates[0]
-    xstart = selected_coordinates[1]
+    return false if @selected_piece.name == "knight"
+    ystart = @selected_piece.location[0]
+    xstart = @selected_piece.location[1]
     ydifferential = yend-ystart
     xdifferential = xend-xstart
     return false if ydifferential.abs < 2 && xdifferential.abs < 2
-    steps = [ydifferential, xdifferential].max
+    steps = [ydifferential.abs, xdifferential.abs].max - 1
     yincrement, xincrement = set_increment(ydifferential, xdifferential)
-
+    steps.times do
+      ystart += yincrement
+      xstart += xincrement
+      return true unless @board[ystart][xstart] == " "
+    end
+    return false
   end
 
   def set_increment(ydifferential, xdifferential)
